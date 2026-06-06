@@ -1,252 +1,198 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Huellapet - Otto</title>
     <link rel="stylesheet" href="static/css/style.css">
+    <title>Huellapet</title>
 </head>
-<body>
 
-    <!-- HEADER -->
-    <header class="header">
-        <a href="#" class="logo">
-            <span class="logo-icon">🐾</span>
-            Huellapet
-        </a>
-        <nav class="nav">
-            <a href="#" class="active">🏠 Inicio</a>
-            <a href="#">💡 Consejos</a>
-            <a href="#">✉️ Contacto</a>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Huellapet</h1>
+            </div>
+            <div class="options">
+                <div class="option">
+                    <div class="icon"></div>
+                    <p>Inicio</p>
+                </div>
+                <div class="option">
+                    <div class="icon"></div>
+                    <p>consejos</p>
+                </div>
+                <div class="option">
+                    <div class="icon"></div>
+                    <p>contacto</p>
+                </div>
+            </div>
         </nav>
     </header>
-
-    <!-- LAYOUT -->
-    <div class="layout">
-
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="sidebar-menu">
-                <a href="#" class="sidebar-item active">
-                    <span class="icon">🏠</span> Resumen
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">👤</span> Perfil
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">❤️</span> Salud
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">📋</span> Historial
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">📄</span> Documentos
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">📞</span> Contactos de emergencia
-                </a>
-                <a href="#" class="sidebar-item">
-                    <span class="icon">📍</span> Ubicación y extravío
-                </a>
+    <main>
+        <aside>
+            <div class="options-aside">
+                <div>
+                    <div class="icon"></div>
+                    <p>Resumen</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>perfil</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>salud</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>historial</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>Documentos</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>Contactos de emergencia</p>
+                </div>
+                <div>
+                    <div class="icon"></div>
+                    <p>Ubicacion y extravío</p>
+                </div>
             </div>
-
-            <!-- HUELLABOT -->
-            <div class="huellabot" id="huellabotBtn">
-                <div class="huellabot-header">
-                    <div class="huellabot-avatar">🤖</div>
-                    <div>
-                        <div class="huellabot-title">Huellabot</div>
-                        <div class="huellabot-subtitle">Asistente virtual</div>
+            <article class="chatbot">
+                <div class="logo-cb">
+                    <div class="icon-cb"></div>
+                    <div class="description">
+                        <h6>Huellabot</h6>
+                        <p>Asistente virtual</p>
                     </div>
                 </div>
-                <p>¿Tienes dudas? Estoy aquí para ayudarte.</p>
-                <button class="btn-chat" id="chatBtn"> Iniciar chat</button>
-            </div>
+                <div class="content-cb">
+                    <p>¿Tienes dudas? Estoy aqui para ayudarte</p>
+                </div>
+                <button class="btn-cb">
+                    <div class="btn-cb-icon"></div>
+                    Iniciar chat
+                </button>
+            </article>
         </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="main">
-
-            <!-- TOP SECTION -->
-            <div class="top-section">
-
-                <!-- PET CARD -->
-                <div class="pet-card">
-                    <div class="pet-photo-container">
-                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=350&fit=crop" alt="Otto - Golden Retriever" class="pet-photo">
-                        <span class="pet-badge">🐾 Huellapet</span>
+        <section class="container">
+            <article class="animal-content">
+                <img src="" alt="image-animal">
+                <div class="information">
+                    <div class="name">Otto</div>
+                    <div class="race">
+                        <img src="" alt="icon-race">
+                        <p>Golden Retriever</p>
                     </div>
-                    <div class="pet-info">
-                        <h2 class="pet-name">
-                            Otto
-                            <span class="verified-badge">✓</span>
-                        </h2>
-                        <div class="pet-details">
-                            <div class="pet-detail">
-                                <span class="icon">🐕</span> Golden Retriever
-                            </div>
-                            <div class="pet-detail">
-                                <span class="icon"></span> 15 de marzo de 2021
-                            </div>
-                            <div class="pet-detail">
-                                <span class="icon">♂️</span> Macho
-                            </div>
-                            <div class="pet-detail">
-                                <span class="icon">⚖️</span> 28 kg
-                            </div>
-                        </div>
-                        <div class="pet-id">
-                            🪪 ID Huellapet: HPET-8923
-                        </div>
+                    <div class="date">
+                        <img src="" alt="icon-date">
+                        <p>15 de marzo de 2021</p>
+                    </div>
+                    <div class="gender">
+                        <img src="" alt="icon-gender">
+                        <p>Macho</p>
+                    </div>
+                    <div class="weight">
+                        <img src="" alt="icon-weight">
+                        <p>28 Kg</p>
+                    </div>
+                    <div class="id-HP">
+                        <img src="" alt="icon-ID">
+                        <p>ID Huellapet:</p>
+                        <p class="id">HPET-8923</p>
                     </div>
                 </div>
-
-                <!-- ABOUT CARD -->
-                <div class="about-card">
-                    <div>
-                        <h3>Sobre Otto</h3>
-                        <p>Otto es un perro amigable, juguetón y muy cariñoso. Le encanta correr, jugar con la pelota y estar acompañado de personas.</p>
+            </article>
+            <section class="center">
+                <article>
+                    <div class="title">
+                        <img src="" alt="icon-user">
+                        <h3>informacion del tutor</h3>
                     </div>
-                    <button class="heart-btn" id="heartBtn" title="Me gusta">❤️</button>
-                </div>
-
-                <!-- STATS CARD -->
-                <div class="about-card stats-card">
-                    <div>
-                        <h3> Estadísticas rápidas</h3>
-                        <p class="stat-big blue">3 años</p>
-                        <p class="stat-label">de edad</p>
-                        <p class="stat-big green">✅ Al día</p>
-                        <p class="stat-label">en vacunaciones</p>
+                    <div class="name">
+                        <h6>Nombre</h6>
+                        <p>Camila Rodriguez</p>
                     </div>
-                </div>
-            </div>
-
-            <!-- BOTTOM GRID -->
-            <div class="bottom-grid">
-
-                <!-- TUTOR INFO -->
-                <div class="info-card">
-                    <h3><span class="icon">👤</span> Información del tutor</h3>
-                    <div class="tutor-field">
-                        <div class="tutor-label">Nombre</div>
-                        <div class="tutor-value">Camila Rodríguez</div>
+                    <div class="phone">
+                        <h6>Telefono</h6>
+                        <p>+56 9 1234 5678</p>
                     </div>
-                    <div class="tutor-field">
-                        <div class="tutor-label">Teléfono</div>
-                        <div class="tutor-value">+56 9 1234 5678</div>
+                    <div class="email">
+                        <h6>Correo</h6>
+                        <p>Camila Rodriguez</p>
                     </div>
-                    <div class="tutor-field">
-                        <div class="tutor-label">Correo</div>
-                        <div class="tutor-value">camila.rodriguez@gmail.com</div>
+                    <div class="direccion">
+                        <h6>Direccion</h6>
+                        <p>Av. Los Leones 1234, Providencia, Santiago, Chile</p>
                     </div>
-                    <div class="tutor-field">
-                        <div class="tutor-label">Dirección</div>
-                        <div class="tutor-value">Av. Los Leones 1234, Providencia, Santiago, Chile</div>
+                    <button class="btn-atc">Ver Perfil completo <img src="" alt="icon-row"></button>
+                </article>
+                <article>
+                    <div class="title">
+                        <img src="" alt="icon-health">
+                        <h3>Salud</h3>
                     </div>
-                    <a href="#" class="btn-profile">Ver perfil completo →</a>
-                </div>
-
-                <!-- HEALTH -->
-                <div class="info-card">
-                    <h3><span class="icon">❤️</span> Salud</h3>
-                    <div class="health-item">
-                        <div class="health-icon green">✓</div>
-                        <div class="health-text">
-                            <div class="health-title">Vacunas al día</div>
-                            <div class="health-date">Última: 20/04/2024</div>
-                        </div>
+                    <div class="notification-health">
+                        <img src="" alt="icon-complete">
+                        <div class="ntn-hth">
+                            <h6>Vacunas al dia</h6>
+                            <p>Ultima: 20/04/20024</p>
+                        </div class="ntn-hth">
                     </div>
-                    <div class="health-item">
-                        <div class="health-icon green">✓</div>
-                        <div class="health-text">
-                            <div class="health-title">Desparasitación</div>
-                            <div class="health-date">Última: 10/05/2024</div>
-                        </div>
+                    <div class="notification-health">
+                        <img src="" alt="icon-complete">
+                        <div class="ntn-hth">
+                            <h6>Desparasitacion</h6>
+                            <p>Ultima: 15/03/2024</p>
+                        </div class="ntn-hth">
                     </div>
-                    <div class="health-item">
-                        <div class="health-icon orange">!</div>
-                        <div class="health-text">
-                            <div class="health-title">Control veterinario</div>
-                            <div class="health-date">Última visita: 10/05/2024</div>
-                        </div>
+                    <div class="notification-health">
+                        <img src="" alt="icon-complete">
+                        <div class="ntn-hth">
+                            <h6>Control veterinario</h6>
+                            <p>Ultima visita: 10/05/2024</p>
+                        </div class="ntn-hth">
                     </div>
-                    <a href="#" class="btn-history">Ver historial de salud →</a>
-                </div>
-
-                <!-- DOCUMENTS -->
-                <div class="info-card">
-                    <h3><span class="icon">📄</span> Documentos</h3>
-                    <a href="#" class="doc-item">
-                        <span class="doc-icon">📋</span>
-                        Cartilla de vacunación
-                        <span class="arrow">›</span>
-                    </a>
-                    <a href="#" class="doc-item">
-                        <span class="doc-icon">📋</span>
-                        Certificado veterinario
-                        <span class="arrow">›</span>
-                    </a>
-                    <a href="#" class="doc-item">
-                        <span class="doc-icon">📄</span>
-                        Documento de adopción
-                        <span class="arrow">›</span>
-                    </a>
-                    <a href="#" class="doc-item">
-                        <span class="doc-icon">📋</span>
-                        Seguro de mascota
-                        <span class="arrow">›</span>
-                    </a>
-                    <a href="#" class="btn-all-docs">Ver todos los documentos →</a>
-                </div>
-            </div>
-
-            <!-- BOTTOM ROW -->
-            <div class="bottom-row">
-
-                <!-- LOCATION -->
-                <div class="info-card">
-                    <h3><span class="icon"></span> Ubicación y extravío</h3>
-                    <p class="location-info">Si Otto se pierde, puedes ayudarnos a encontrarlo.</p>
-                    <button class="btn-report" id="reportBtn">🚨 Reportar extravío</button>
-                </div>
-
-                <!-- LAST SIGHTING -->
-                <div class="info-card">
-                    <h3><span class="icon">📍</span> Última ubicación registrada</h3>
-                    <p class="last-sighting">
-                        <strong>Parque Bicentenario</strong>, Vitacura<br>
-                        Santiago, Chile<br>
-                        Hoy, 10:00 a. m.
-                    </p>
-                </div>
-
-                <!-- NOTIFICATIONS -->
-                <div class="info-card">
-                    <h3><span class="icon"></span> Notificaciones</h3>
-                    <p class="notif-text">Te avisaremos si alguien escanea la placa de Otto.</p>
-                    <div class="toggle-container">
-                        <span class="toggle-label" id="notifLabel">Notificaciones activadas</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="notifToggle" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <button class="btn-atc">Ver historial de salud <img src="" alt="icon-row"></button>
+                </article>
+                <article>
+                    <div class="title">
+                        <img src="" alt="icon-documentation">
+                        <h3>Documentos</h3>
                     </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <h3 id="modalTitle">¡Acción realizada!</h3>
-            <p id="modalText">La acción se ha completado exitosamente.</p>
-            <button class="modal-close" id="modalClose">Entendido</button>
-        </div>
-    </div>
-
-    <script src="static/js/script.js"></script>
+                    <div class="documentation">
+                        <img src="" alt="icon-documentation-outline">
+                        <h6>Cartilla de vacunacion</h6>
+                        <img src="" alt="icon-row">
+                    </div>
+                    <div class="documentation">
+                        <img src="" alt="icon-documentation-outline">
+                        <h6>Certificado verinario</h6>
+                        <img src="" alt="icon-row">
+                    </div>
+                    <div class="documentation">
+                        <img src="" alt="icon-documentation-outline">
+                        <h6>Documento de adopcion</h6>
+                        <img src="" alt="icon-row">
+                    </div>
+                    <div class="documentation">
+                        <img src="" alt="icon-documentation-outline">
+                        <h6>Seguro de mascota</h6>
+                        <img src="" alt="icon-row">
+                    </div>
+                    <button class="btn-atc">Ver todos los documentos <img src="" alt="icon-row"></button>
+                </article>
+                <footer>
+                    
+                </footer>
+            </section>
+        </section>
+    </main>
 </body>
+
 </html>
