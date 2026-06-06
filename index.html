@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huellapet - Otto</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <a href="#" class="logo">
+            <span class="logo-icon">🐾</span>
+            Huellapet
+        </a>
+        <nav class="nav">
+            <a href="#" class="active">🏠 Inicio</a>
+            <a href="#">💡 Consejos</a>
+            <a href="#">✉️ Contacto</a>
+        </nav>
+    </header>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-item active">
+                    <span class="icon">🏠</span> Resumen
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">👤</span> Perfil
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">❤️</span> Salud
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">📋</span> Historial
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">📄</span> Documentos
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">📞</span> Contactos de emergencia
+                </a>
+                <a href="#" class="sidebar-item">
+                    <span class="icon">📍</span> Ubicación y extravío
+                </a>
+            </div>
+
+            <!-- HUELLABOT -->
+            <div class="huellabot" id="huellabotBtn">
+                <div class="huellabot-header">
+                    <div class="huellabot-avatar">🤖</div>
+                    <div>
+                        <div class="huellabot-title">Huellabot</div>
+                        <div class="huellabot-subtitle">Asistente virtual</div>
+                    </div>
+                </div>
+                <p>¿Tienes dudas? Estoy aquí para ayudarte.</p>
+                <button class="btn-chat" id="chatBtn"> Iniciar chat</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+
+            <!-- TOP SECTION -->
+            <div class="top-section">
+
+                <!-- PET CARD -->
+                <div class="pet-card">
+                    <div class="pet-photo-container">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=350&fit=crop" alt="Otto - Golden Retriever" class="pet-photo">
+                        <span class="pet-badge">🐾 Huellapet</span>
+                    </div>
+                    <div class="pet-info">
+                        <h2 class="pet-name">
+                            Otto
+                            <span class="verified-badge">✓</span>
+                        </h2>
+                        <div class="pet-details">
+                            <div class="pet-detail">
+                                <span class="icon">🐕</span> Golden Retriever
+                            </div>
+                            <div class="pet-detail">
+                                <span class="icon"></span> 15 de marzo de 2021
+                            </div>
+                            <div class="pet-detail">
+                                <span class="icon">♂️</span> Macho
+                            </div>
+                            <div class="pet-detail">
+                                <span class="icon">⚖️</span> 28 kg
+                            </div>
+                        </div>
+                        <div class="pet-id">
+                            🪪 ID Huellapet: HPET-8923
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABOUT CARD -->
+                <div class="about-card">
+                    <div>
+                        <h3>Sobre Otto</h3>
+                        <p>Otto es un perro amigable, juguetón y muy cariñoso. Le encanta correr, jugar con la pelota y estar acompañado de personas.</p>
+                    </div>
+                    <button class="heart-btn" id="heartBtn" title="Me gusta">❤️</button>
+                </div>
+
+                <!-- STATS CARD -->
+                <div class="about-card stats-card">
+                    <div>
+                        <h3> Estadísticas rápidas</h3>
+                        <p class="stat-big blue">3 años</p>
+                        <p class="stat-label">de edad</p>
+                        <p class="stat-big green">✅ Al día</p>
+                        <p class="stat-label">en vacunaciones</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM GRID -->
+            <div class="bottom-grid">
+
+                <!-- TUTOR INFO -->
+                <div class="info-card">
+                    <h3><span class="icon">👤</span> Información del tutor</h3>
+                    <div class="tutor-field">
+                        <div class="tutor-label">Nombre</div>
+                        <div class="tutor-value">Camila Rodríguez</div>
+                    </div>
+                    <div class="tutor-field">
+                        <div class="tutor-label">Teléfono</div>
+                        <div class="tutor-value">+56 9 1234 5678</div>
+                    </div>
+                    <div class="tutor-field">
+                        <div class="tutor-label">Correo</div>
+                        <div class="tutor-value">camila.rodriguez@gmail.com</div>
+                    </div>
+                    <div class="tutor-field">
+                        <div class="tutor-label">Dirección</div>
+                        <div class="tutor-value">Av. Los Leones 1234, Providencia, Santiago, Chile</div>
+                    </div>
+                    <a href="#" class="btn-profile">Ver perfil completo →</a>
+                </div>
+
+                <!-- HEALTH -->
+                <div class="info-card">
+                    <h3><span class="icon">❤️</span> Salud</h3>
+                    <div class="health-item">
+                        <div class="health-icon green">✓</div>
+                        <div class="health-text">
+                            <div class="health-title">Vacunas al día</div>
+                            <div class="health-date">Última: 20/04/2024</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-icon green">✓</div>
+                        <div class="health-text">
+                            <div class="health-title">Desparasitación</div>
+                            <div class="health-date">Última: 10/05/2024</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-icon orange">!</div>
+                        <div class="health-text">
+                            <div class="health-title">Control veterinario</div>
+                            <div class="health-date">Última visita: 10/05/2024</div>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-history">Ver historial de salud →</a>
+                </div>
+
+                <!-- DOCUMENTS -->
+                <div class="info-card">
+                    <h3><span class="icon">📄</span> Documentos</h3>
+                    <a href="#" class="doc-item">
+                        <span class="doc-icon">📋</span>
+                        Cartilla de vacunación
+                        <span class="arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-item">
+                        <span class="doc-icon">📋</span>
+                        Certificado veterinario
+                        <span class="arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-item">
+                        <span class="doc-icon">📄</span>
+                        Documento de adopción
+                        <span class="arrow">›</span>
+                    </a>
+                    <a href="#" class="doc-item">
+                        <span class="doc-icon">📋</span>
+                        Seguro de mascota
+                        <span class="arrow">›</span>
+                    </a>
+                    <a href="#" class="btn-all-docs">Ver todos los documentos →</a>
+                </div>
+            </div>
+
+            <!-- BOTTOM ROW -->
+            <div class="bottom-row">
+
+                <!-- LOCATION -->
+                <div class="info-card">
+                    <h3><span class="icon"></span> Ubicación y extravío</h3>
+                    <p class="location-info">Si Otto se pierde, puedes ayudarnos a encontrarlo.</p>
+                    <button class="btn-report" id="reportBtn">🚨 Reportar extravío</button>
+                </div>
+
+                <!-- LAST SIGHTING -->
+                <div class="info-card">
+                    <h3><span class="icon">📍</span> Última ubicación registrada</h3>
+                    <p class="last-sighting">
+                        <strong>Parque Bicentenario</strong>, Vitacura<br>
+                        Santiago, Chile<br>
+                        Hoy, 10:00 a. m.
+                    </p>
+                </div>
+
+                <!-- NOTIFICATIONS -->
+                <div class="info-card">
+                    <h3><span class="icon"></span> Notificaciones</h3>
+                    <p class="notif-text">Te avisaremos si alguien escanea la placa de Otto.</p>
+                    <div class="toggle-container">
+                        <span class="toggle-label" id="notifLabel">Notificaciones activadas</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="notifToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3 id="modalTitle">¡Acción realizada!</h3>
+            <p id="modalText">La acción se ha completado exitosamente.</p>
+            <button class="modal-close" id="modalClose">Entendido</button>
+        </div>
+    </div>
+
+    <script src="static/js/script.js"></script>
+</body>
+</html>
