@@ -1,15 +1,17 @@
+
 /* RESET */
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Helvetica;
+    font-family:Roboto;
 }
 
 /* ESTILOS */
 :root {
     --azul-primario: #2563EB;   /* logo, botones, títulos de cards, activos */
     --azul-claro: #EEF2FF;      /* fondo stats card, fondo badge ID, hover sidebar */
+    --azul-botones: #253d74;    
     --azul-borde: #3c4a6b;      /* borde badge ID */
 
     --verde: #16A34A;           /* íconos check de salud y texto "Al día" */
@@ -25,14 +27,35 @@
 }
 
 nav{display: flex;justify-content: space-between;padding: 20px;}
-nav .options{display: flex;gap: 15px;justify-content: space-between;}
+nav .options{display: flex;gap: 15px;justify-content: space-between;stroke: var(--azul-borde);}
+nav .options .home svg{fill: var(--azul-primario); stroke: var(--azul-primario);}
 nav .options .option{display: flex; align-items: center;gap: 5px;color: var(--azul-primario);font-weight: bold;}
 img{width: 35px;}
-svg, path{width: 35px; height: 35px;}
+svg, path{width: 27px; height: 27px;}
 main,footer,.center,.location,article.animal-content,.options-aside{display: flex;}
 
-.options-aside{gap: 25px;flex-direction: column;margin: 20px;}
+.options-aside{gap: 2px;flex-direction: column;margin: 20px;}
 .options-aside .home{background-color: var(--azul-primario);}
-.options-aside .option{display: flex; align-items: center; gap: 25px;}
+.options-aside .option{display: flex; align-items: center; gap: 25px;border-radius: 7px;padding: 8px;stroke: var(--azul-borde);}
+.home{color: white;}
+.animal-content .info,.notification-health,.documentation{display: flex;align-items: center;border: var(--borde);}
+.animal-content{display: flex;}
+button{background-color: var(--azul-claro);border: 0;display: flex;align-items: center; justify-content:space-between;width: 250px;padding-inline: 20px; padding-block: 5px;border-radius: 7px;color: var(--azul-botones);font-weight: bold;font-size: 14px;}
+button svg{stroke: var(--azul-botones);}
+article{margin: 10px;}
+article .title {display: flex; align-items: center;gap: 10px;} 
+article .title svg{stroke: var(--azul-primario);fill: var(--azul-primario);}
+article{display: flex;flex-direction: column;justify-content: center;gap: 15px;}
+.ntn-hth h6{font-size: 15px;}
+.ntn-hth p{font-size: 13px;}
+
+
+
+
+
+
+
+svg{stroke: var(--azul-borde);}
+
 
 
