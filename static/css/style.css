@@ -3,13 +3,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Helvetica;
 }
 
 /* ESTILOS */
 :root {
     --azul-primario: #2563EB;   /* logo, botones, títulos de cards, activos */
     --azul-claro: #EEF2FF;      /* fondo stats card, fondo badge ID, hover sidebar */
-    --azul-borde: #C7D7FD;      /* borde badge ID */
+    --azul-borde: #3c4a6b;      /* borde badge ID */
 
     --verde: #16A34A;           /* íconos check de salud y texto "Al día" */
     --verde-icono: #DCFCE7;     /* fondo circular de los checks de salud */
@@ -22,3 +23,16 @@
     --texto-suave: #999999;     /* labels pequeños, fechas */
     --borde: #F0F0F0;           /* líneas divisoras */
 }
+
+nav{display: flex;justify-content: space-between;padding: 20px;}
+nav .options{display: flex;gap: 15px;justify-content: space-between;}
+nav .options .option{display: flex; align-items: center;gap: 5px;color: var(--azul-primario);font-weight: bold;}
+img{width: 35px;}
+svg, path{width: 35px; height: 35px;}
+main,footer,.center,.location,article.animal-content,.options-aside{display: flex;}
+
+.options-aside{gap: 25px;flex-direction: column;margin: 20px;}
+.options-aside .home{background-color: var(--azul-primario);}
+.options-aside .option{display: flex; align-items: center; gap: 25px;}
+
+
