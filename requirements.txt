@@ -2,4 +2,5 @@ flask
 PyMySQL
 flask-dotenv
 bcrypt
+python-dotenv
 
