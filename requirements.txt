@@ -1,6 +1,4 @@
-flask
+Flask
 PyMySQL
-flask-dotenv
 bcrypt
 python-dotenv
-
