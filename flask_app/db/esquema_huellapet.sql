@@ -302,3 +302,21 @@ INSERT INTO tipo_estado_pago (nombre_tipo, descripcion_tipo) VALUES
 ('Completado', 'Transacción aprobada'),
 ('Pendiente', 'Pago en proceso de confirmación'),
 ('Fallido', 'Transacción rechazada');
+
+-- ========================================================
+-- 8. AVISTAMIENTOS POR ESCANEO DE MASCOTA EXTRAVIADA
+-- ========================================================
+CREATE TABLE avistamiento (
+    id_avistamiento INT AUTO_INCREMENT PRIMARY KEY,
+    id_mascota INT NOT NULL,
+    latitud DECIMAL(10, 8) NOT NULL,
+    longitud DECIMAL(11, 8) NOT NULL,
+    precision_metros DECIMAL(10, 2) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_mascota) REFERENCES mascota(id_mascota) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Roles mínimos esperados por el controller.
+INSERT IGNORE INTO tipo_usuario (id_tipo_usuario,nombre_tipo,descripcion_tipo) VALUES
+(1,'Tutor','Dueño o tutor de mascotas'),
+(2,'Veterinario','Profesional veterinario');
