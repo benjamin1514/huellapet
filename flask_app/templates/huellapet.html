@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huellapet | Resumen de Otto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/huellapet.css">
+</head>
+
+<body>
+    <!-- Iconos reutilizables -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="5.5" cy="11" rx="2" ry="2.8"/><ellipse cx="9.5" cy="6.2" rx="2" ry="2.8"/><ellipse cx="14.5" cy="6.2" rx="2" ry="2.8"/><ellipse cx="18.5" cy="11" rx="2" ry="2.8"/><path d="M12 11.5c-3 0-6 3.2-6 5.7 0 1.8 1.4 2.8 3 2.8 1.2 0 2-.5 3-.5s1.8.5 3 .5c1.6 0 3-1 3-2.8 0-2.5-3-5.7-6-5.7z"/></symbol>
+            <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10l8-7 8 7v10h-5v-4a3 3 0 0 0-6 0v4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+            <symbol id="i-shield" viewBox="0 0 24 24"><path d="M4 7l8-4 8 4c0 5.2-2.8 12.5-8 14-5.2-1.5-8-8.8-8-14z M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 0l8 8 8-8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+            <symbol id="i-heart-pulse" viewBox="0 0 24 24"><path d="M4.8 12.5L12 20l7.2-7.5M4.8 12.5l-.5-.5A5.4 5.4 0 0 1 3 8.7C3 6.1 5 4 7.5 4c1.2 0 2.4.5 3.2 1.4L12 6.7l1.3-1.3A4.5 4.5 0 0 1 16.5 4C19 4 21 6.1 21 8.7c0 1.3-.5 2.5-1.3 3.3l-.5.5M4.8 12.5H8l1-2 2 4 3-6.500 2 4.500h3.200" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M4 19V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm0-8h16M9 3v4m6-4v4M8 14.5h3M8 17.500h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-doc" viewBox="0 0 24 24"><path d="M13 3H5v18h14V9m-6-6h1l5 5v1m-6-6v4c0 1 1 2 2 2h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-phone" viewBox="0 0 24 24"><path d="M21 19.200v-2.700c0-.4-.2-.9-.4-1.200-.8-.9-3.600-1.600-4.700-1.400-.9.200-1.400 1-2 1.600a14 14 0 0 1-5.400-5.400c.6-.6 1.400-1.200 1.600-2 .2-1.100-.4-3.900-1.300-4.700A2 2 0 0 0 7.500 3H4.800C3.800 3 2.900 3.900 3 5c0 9 7 16 16 16 1.100.1 2-.8 2-1.800z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+            <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21c4.400-2 8-5.600 8-10a8 8 0 1 0-16 0c0 4.400 3.600 8 8 10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="11" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+            <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-check" viewBox="0 0 24 24"><path d="M6 12.500l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-chat" viewBox="0 0 24 24"><path d="M12 3C7 3 3 6.600 3 11c0 2 .8 3.800 2.200 5.200L4 21l4.500-1.800c1 .3 2.300.8 3.500.8 5 0 9-3.600 9-8.200S17 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><circle cx="8.500" cy="11" r="1" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="currentColor"/><circle cx="15.500" cy="11" r="1" fill="currentColor"/></symbol>
+            <symbol id="i-doc-badge" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z" fill="currentColor"/><path d="M10 12h5M10 15.500h5M10 8.500h2" stroke="#fff" stroke-width="1.500" stroke-linecap="round"/></symbol>
+            <symbol id="i-file-small" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M14 3v4h4M10 14h4M10 17h4" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></symbol>
+            <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.500" fill="none" stroke="currentColor" stroke-width="1.600"/><circle cx="12" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.600"/><path d="M12 2.500v4M12 17.500v4M2.500 12h4M17.500 12h4" stroke="currentColor" stroke-width="1.600" stroke-linecap="round"/></symbol>
+            <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9c0 3 2 8 2 8H4s2-5 2-8a6 6 0 0 1 12 0zM9.500 20a2.500 2.500 0 0 0 5 0" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3L2 21h20z" fill="currentColor"/><path d="M12 10v5M12 17.500v.5" stroke="#d92d2d" stroke-width="2" stroke-linecap="round"/></symbol>
+            <symbol id="i-male" viewBox="0 0 24 24"><circle cx="10" cy="14" r="5" fill="none" stroke="currentColor" stroke-width="1.700"/><path d="M14 10l6-6m-5 0h5v5" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+            <symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 8h12l3 12H3z" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"/><path d="M9 8a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.600"/><circle cx="12" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="1.600"/></symbol>
+            <symbol id="i-send" viewBox="0 0 24 24"><path d="M3 11.500L21 3l-8 18-2.500-7.500z" fill="currentColor"/></symbol>
+            <symbol id="i-vet" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.400 3.600-7 8-7s8 2.600 8 7z" fill="currentColor"/><path d="M12 14l-1.500 3 1.500 1.500 1.500-1.500z" fill="#fff"/></symbol>
+            <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="4" fill="currentColor"/><path d="M12 8V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="4.500" r="1.500" fill="currentColor"/><circle cx="9" cy="13" r="1.600" fill="#fff"/><circle cx="15" cy="13" r="1.600" fill="#fff"/></symbol>
+        </defs>
+    </svg>
+
+    <div class="app">
+        <!-- ===== HEADER ===== -->
+        <header class="topbar">
+            <a class="brand" href="#">
+                <svg class="brand-icon" fill="currentColor"><use href="#i-paw" /></svg>
+                <span>Huellapet</span>
+            </a>
+            <nav class="topnav" aria-label="Principal">
+                <a href="#" class="topnav-link is-active"><svg><use href="#i-home" /></svg>Inicio</a>
+                <a href="#" class="topnav-link"><svg><use href="#i-shield" /></svg>Consejos</a>
+                <a href="#" class="topnav-link"><svg><use href="#i-mail" /></svg>Contacto</a>
+            </nav>
+        </header>
+
+        <div class="layout">
+            <!-- ===== SIDEBAR ===== -->
+            <aside class="sidebar">
+                <nav class="side-menu" aria-label="Secciones">
+                    <a href="#" class="side-link is-active"><svg><use href="#i-home" /></svg>Resumen</a>
+                    <a href="#" class="side-link"><svg><use href="#i-user" /></svg>Perfil</a>
+                    <a href="#" class="side-link"><svg><use href="#i-heart-pulse" /></svg>Salud</a>
+                    <a href="#" class="side-link"><svg><use href="#i-calendar" /></svg>Historial</a>
+                    <a href="#" class="side-link"><svg><use href="#i-doc" /></svg>Documentos</a>
+                    <a href="#" class="side-link"><svg><use href="#i-phone" /></svg>Contactos de emergencia</a>
+                    <a href="#" class="side-link"><svg><use href="#i-pin" /></svg>Ubicación y extravío</a>
+                </nav>
+
+                <div class="huellabot">
+                    <div class="huellabot-head">
+                        <span class="huellabot-avatar"><svg><use href="#i-robot" /></svg></span>
+                        <div>
+                            <h6>HuellaBot</h6>
+                            <p>Asistente virtual</p>
+                        </div>
+                    </div>
+                    <p class="huellabot-text">¿Tienes dudas? Estoy aquí para ayudarte.</p>
+                    <button class="huellabot-btn" type="button"><svg><use href="#i-chat" /></svg>Iniciar chat</button>
+                </div>
+            </aside>
+
+            <!-- ===== CONTENIDO ===== -->
+            <main class="content">
+                <!-- Tarjeta principal de la mascota -->
+                <section class="card pet-card">
+                    <img class="pet-photo" src="static/image/otto.jpg" alt="Otto, golden retriever">
+
+                    <div class="pet-info">
+                        <h2 class="pet-name">Otto
+                            <svg class="seal" viewBox="0 0 24 24"><path d="M12 1.500l2.600 2 3.300-.2 1.200 3.100 2.800 1.800-1 3.100 1 3.100-2.800 1.800-1.200 3.100-3.300-.2-2.600 2-2.600-2-3.300.2-1.200-3.100-2.800-1.800 1-3.100-1-3.100 2.800-1.800 1.200-3.100 3.300.2z" fill="#e2a43a"/><path d="M8 12.200l3 3 5-5.600" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </h2>
+                        <p class="info"><svg fill="currentColor"><use href="#i-paw" /></svg>Golden Retriever</p>
+                        <p class="info"><svg><use href="#i-calendar" /></svg>15 de marzo de 2021</p>
+                        <p class="chip chip-male"><svg><use href="#i-male" /></svg>Macho</p>
+                        <p class="chip chip-weight"><svg><use href="#i-weight" /></svg>28 kg</p>
+                        <p class="pet-id"><span class="pet-id-icon">ID</span>ID Huellapet: <strong>HPET-6923</strong></p>
+                    </div>
+
+                    <div class="about">
+                        <h3>Sobre Otto</h3>
+                        <p>Otto es un perro amigable, juguetón y muy cariñoso. Le encanta correr, jugar con la pelota y estar acompañado de personas.</p>
+                        <svg class="about-heart" viewBox="0 0 24 24"><path d="M12 21l-1.400-1.300C5.400 15 2 11.900 2 8.100 2 5 4.400 2.600 7.500 2.600c1.700 0 3.400.8 4.500 2.100 1.100-1.300 2.800-2.100 4.500-2.100C19.600 2.600 22 5 22 8.100c0 3.800-3.400 6.900-8.600 11.600z" fill="currentColor"/></svg>
+                    </div>
+                </section>
+
+                <!-- Tres tarjetas -->
+                <div class="trio">
+                    <section class="card info-card card-tutor">
+                        <h3 class="card-title"><span class="title-icon"><svg fill="currentColor"><use href="#i-user" /></svg></span>Información del tutor</h3>
+                        <dl class="data">
+                            <div><dt>Nombre</dt><dd>Camila Rodríguez</dd></div>
+                            <div><dt>Teléfono</dt><dd>+56 9 1234 5678</dd></div>
+                            <div><dt>Correo</dt><dd>camila.rodriguez@gmail.com</dd></div>
+                            <div><dt>Dirección</dt><dd>Av. Los Leones 1234, Providencia, Santiago, Chile</dd></div>
+                        </dl>
+                        <button class="btn btn-teal" type="button">Ver perfil completo<svg><use href="#i-chevron" /></svg></button>
+                    </section>
+
+                    <section class="card info-card card-salud">
+                        <h3 class="card-title"><span class="title-icon"><svg fill="currentColor"><use href="#i-heart-pulse" /></svg></span>Salud</h3>
+                        <ul class="health">
+                            <li><span class="check c1"><svg><use href="#i-check" /></svg></span><div><h6>Vacunas al día</h6><p>Última: 20/04/2024</p></div></li>
+                            <li><span class="check c2"><svg><use href="#i-check" /></svg></span><div><h6>Desparasitación</h6><p>Última: 15/03/2024</p></div></li>
+                            <li><span class="check c3"><svg><use href="#i-check" /></svg></span><div><h6>Control veterinario</h6><p>Última visita: 10/05/2024</p></div></li>
+                        </ul>
+                        <button class="btn btn-green" type="button">Ver historial<svg><use href="#i-chevron" /></svg></button>
+                    </section>
+
+                    <section class="card info-card card-docs">
+                        <h3 class="card-title"><span class="title-icon"><svg><use href="#i-doc-badge" /></svg></span>Documentos</h3>
+                        <ul class="docs">
+                            <li><a href="#"><span class="doc-icon d1"><svg><use href="#i-file-small" /></svg></span>Cartilla de vacunación<svg class="arrow"><use href="#i-chevron" /></svg></a></li>
+                            <li><a href="#"><span class="doc-icon d2"><svg><use href="#i-file-small" /></svg></span>Certificado veterinario<svg class="arrow"><use href="#i-chevron" /></svg></a></li>
+                            <li><a href="#"><span class="doc-icon d3"><svg><use href="#i-file-small" /></svg></span>Documento de adopción<svg class="arrow"><use href="#i-chevron" /></svg></a></li>
+                            <li><a href="#"><span class="doc-icon d4"><svg><use href="#i-file-small" /></svg></span>Seguro de mascota<svg class="arrow"><use href="#i-chevron" /></svg></a></li>
+                        </ul>
+                        <button class="btn btn-purple" type="button">Ver todos<svg><use href="#i-chevron" /></svg></button>
+                    </section>
+                </div>
+
+                <!-- Ubicación y extravío -->
+                <footer class="lost">
+                    <div class="lost-main">
+                        <h3><svg><use href="#i-pin" /></svg>Ubicación y extravío</h3>
+                        <p>Si Otto se pierde, puedes ayudarnos a encontrarlo.</p>
+                        <button class="btn-alert" type="button"><svg><use href="#i-alert" /></svg>Reportar extravío</button>
+                    </div>
+                    <div class="lost-last">
+                        <span class="lost-icon"><svg><use href="#i-target" /></svg></span>
+                        <div>
+                            <h5>Última ubicación registrada</h5>
+                            <p>Parque Bicentenario, Vitacura</p>
+                            <p>Santiago, Chile</p>
+                            <p class="muted">Hoy, 10:30 a. m.</p>
+                        </div>
+                    </div>
+                    <div class="lost-notif">
+                        <span class="notif-icon"><svg><use href="#i-bell" /></svg></span>
+                        <div>
+                            <h5>Notificaciones activadas</h5>
+                            <p>Te avisaremos si alguien encuentra la placa de Otto.</p>
+                        </div>
+                        <label class="switch" aria-label="Notificaciones">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </footer>
+            </main>
+
+            <!-- ===== CHAT ===== -->
+            <aside class="chat card">
+                <header class="chat-head">
+                    <span class="chat-avatar"><svg><use href="#i-chat" /></svg></span>
+                    <h3>Chat con veterinarios</h3>
+                    <span class="online"><i></i>En línea</span>
+                </header>
+                <p class="chat-sub">Resuelve tus dudas y recibe orientación profesional en tiempo real.</p>
+
+                <div class="chat-box">
+                    <div class="msg">
+                        <span class="msg-avatar"><svg><use href="#i-vet" /></svg></span>
+                        <div class="bubble">
+                            <div class="bubble-top"><strong>Veterinario</strong><time>10:24 a. m.</time></div>
+                            <p>¡Hola! ¿En qué podemos ayudarte hoy con Otto?</p>
+                        </div>
+                    </div>
+                    <div class="msg msg-me">
+                        <div class="bubble">
+                            <div class="bubble-top"><time>10:25 a. m.</time></div>
+                            <p>Hola, tengo una duda sobre su alimentación.</p>
+                            <svg class="ticks" viewBox="0 0 24 24"><path d="M2 13l4 4L14 8M10 15l2 2 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <div class="msg">
+                        <span class="msg-avatar"><svg><use href="#i-vet" /></svg></span>
+                        <div class="bubble">
+                            <div class="bubble-top"><strong>Veterinario</strong><time>10:26 a. m.</time></div>
+                            <p>Perfecto, te ayudo con eso. ¿Hace cuánto cambiaste su alimento?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" placeholder="Escribe tu mensaje..." aria-label="Mensaje">
+                    <button type="button" aria-label="Enviar"><svg><use href="#i-send" /></svg></button>
+                </div>
+                <button class="btn-contact" type="button"><svg><use href="#i-chat" /></svg>Contactar veterinario</button>
+                <a class="vets-online" href="#"><i></i>Veterinarios disponibles ahora<svg><use href="#i-chevron" /></svg></a>
+            </aside>
+        </div>
+    </div>
+</body>
+
+</html>
