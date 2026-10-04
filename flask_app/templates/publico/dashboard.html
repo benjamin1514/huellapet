@@ -1,1 +1,34 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha HuellaPet</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head><body><main class="container py-4">{% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div class="alert alert-{{c}}">{{m}}</div>{% endfor %}{% endwith %}<h1>{{ mascota.nombre }}</h1><p>{{ mascota.especie }} · {{ mascota.raza or '' }}</p>{% if extravio %}<div class="alert alert-danger"><strong>Mascota reportada como extraviada.</strong><p id="geo-status">Solicitando ubicación para registrar el avistamiento…</p></div>{% endif %}<h2>Salud pública</h2>{% for item in salud %}<article><strong>{{ item.titulo }}</strong> — {{ item.fecha_atencion }}<p>{{ item.descripcion }}</p></article>{% else %}<p>Sin registros de salud.</p>{% endfor %}<h3>Alergias y condiciones</h3>{% for c in condiciones %}<p>{{ c.nombre_condicion }} ({{ c.gravedad }})</p>{% else %}<p>Sin condiciones registradas.</p>{% endfor %}{% if es_dueno %}<hr><h2>Área privada del dueño</h2><a href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">Documentos privados</a><form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"><button name="extraviado" value="{{ 0 if extravio else 1 }}" class="btn btn-warning mt-2">{{ 'Marcar como encontrada' if extravio else 'Reportar extravío' }}</button></form>{% endif %}{% if extravio %}<script>navigator.geolocation?.getCurrentPosition(async p=>{const r=await fetch("{{ url_for('registrar_ubicacion',codigo=mascota.codigo_huellapet) }}",{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({latitud:p.coords.latitude,longitud:p.coords.longitude,precision_metros:p.coords.accuracy})});document.getElementById('geo-status').textContent=r.ok?'Ubicación del avistamiento registrada.':'No se pudo registrar la ubicación.'},()=>{document.getElementById('geo-status').textContent='No se compartió la ubicación.'});</script>{% endif %}</main></body></html>
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ficha HuellaPet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <main class="container py-4">{% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div
+            class="alert alert-{{c}}">{{m}}</div>{% endfor %}{% endwith %}<h1>{{ mascota.nombre }}</h1>
+        <p>{{ mascota.especie }} · {{ mascota.raza or '' }}</p>{% if extravio %}<div class="alert alert-danger">
+            <strong>Mascota reportada como extraviada.</strong>
+            <p id="geo-status">Solicitando ubicación para registrar el avistamiento…</p>
+        </div>{% endif %}<h2>Salud pública</h2>{% for item in salud %}<article><strong>{{ item.titulo }}</strong> — {{
+            item.fecha_atencion }}<p>{{ item.descripcion }}</p>
+        </article>{% else %}<p>Sin registros de salud.</p>{% endfor %}<h3>Alergias y condiciones</h3>{% for c in
+        condiciones %}<p>{{ c.nombre_condicion }} ({{ c.gravedad }})</p>{% else %}<p>Sin condiciones registradas.</p>{%
+        endfor %}{% if es_dueno %}
+        <hr>
+        <h2>Área privada del dueño</h2><a
+            href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">Documentos privados</a>
+        <form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"><button
+                name="extraviado" value="{{ 0 if extravio else 1 }}" class="btn btn-warning mt-2">{{ 'Marcar como
+                encontrada' if extravio else 'Reportar extravío' }}</button></form>{% endif %}{% if extravio %}
+        <script>navigator.geolocation?.getCurrentPosition(async p => { const r = await fetch("{{ url_for('registrar_ubicacion',codigo=mascota.codigo_huellapet) }}", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ latitud: p.coords.latitude, longitud: p.coords.longitude, precision_metros: p.coords.accuracy }) }); document.getElementById('geo-status').textContent = r.ok ? 'Ubicación del avistamiento registrada.' : 'No se pudo registrar la ubicación.' }, () => { document.getElementById('geo-status').textContent = 'No se compartió la ubicación.' });</script>
+        {% endif %}
+    </main>
+</body>
+
+</html>
