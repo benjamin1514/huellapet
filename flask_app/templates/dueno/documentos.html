@@ -1,19 +1,55 @@
-<!doctype html>
-<html lang="es">
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Documentos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block titulo %}Huellapet | Documentos de {{ mascota.nombre }}{% endblock %}
 
-<body>
-    <main class="container py-4">{% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div
-            class="alert alert-{{c}}">{{m}}</div>{% endfor %}{% endwith %}<h1>Documentos privados de {{ mascota.nombre
-            }}</h1>{% for d in documentos %}<p>{{ d.nombre_doc }} — {{ d.tipo }}</p>{% else %}<p>Sin documentos.</p>{%
-        endfor %}</main>
-</body>
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Documentos de {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_for('dashboard_publico', codigo=mascota.codigo_huellapet) }}">← Volver a la ficha</a></p>
 
-</html>
+    <!-- Lista de documentos -->
+    <section class="card tarjeta tarjeta-docs">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-doc-badge"></use></svg></span>Documentos guardados</h2>
+
+        <ul class="lista-docs lista-docs-grande">
+            {% for d in documentos %}
+                <li class="fila-doc">
+                    <a href="{{ url_for('static', filename=d.archivo_url) }}" target="_blank" rel="noopener">
+                        <span class="icono-doc color-{{ loop.index0 % 4 }}"><svg><use href="#i-file-small"></use></svg></span>
+                        <span>{{ d.nombre_doc }}<small>{{ d.tipo }} · {{ m.fecha_corta(d.created_at) }}</small></span>
+                    </a>
+                    <form method="post" data-confirmar="¿Eliminar este documento?"
+                          action="{{ url_for('eliminar_documento', id_mascota=mascota.id_mascota, id_documento=d.id_documento) }}">
+                        <button class="boton-texto" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="vacio">Aún no hay documentos guardados.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Subir documento -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Subir un documento</h2>
+
+        <form method="post" action="{{ url_for('crear_documento', id_mascota=mascota.id_mascota) }}" enctype="multipart/form-data" class="formulario">
+            <label class="campo">Tipo de documento
+                <select name="id_tipo_documento" required>
+                    {% for t in tipos_documento %}<option value="{{ t.id }}">{{ t.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Nombre (opcional)
+                <input type="text" name="nombre_doc">
+            </label>
+            <label class="campo campo-ancho">Archivo (PDF o imagen)
+                <input type="file" name="documento" accept=".pdf,image/*" required>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-violeta boton-auto" type="submit">Guardar documento<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Huellapet | Mis mascotas{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Mis mascotas</h1>
+    {% include 'dueno/_lista_mascotas.html' %}
+    <a class="boton boton-claro boton-auto" href="{{ url_for('mi_cuenta') }}">Registrar otra mascota</a>
+</main>
+{% endblock %}

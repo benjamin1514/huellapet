@@ -1,0 +1,26 @@
+{# Datos del tutor (tabla usuario). Si "completa" es verdadero se muestra en columnas y sin botón #}
+<section class="card tarjeta tarjeta-tutor">
+    <h3 class="titulo-tarjeta">
+        <span class="icono-titulo"><svg><use href="#i-user"></use></svg></span>Información del tutor
+    </h3>
+
+    {% if tutor %}
+        <dl class="lista-datos {{ 'en-columnas' if completa }}">
+            <div><dt>Nombre</dt><dd>{{ tutor.nombre }}</dd></div>
+
+            <div><dt>Teléfono</dt><dd>{% if tutor.telefono %}<a class="enlace" href="tel:{{ tutor.telefono }}">{{ tutor.telefono }}</a>{% else %}No registrado{% endif %}</dd></div>
+
+            {# El correo y la dirección solo los ve el tutor o un veterinario #}
+            {% if ver_privado %}
+                <div><dt>Correo</dt><dd>{{ tutor.email }}</dd></div>
+                <div><dt>Dirección</dt><dd>{{ tutor.direccion or 'No registrada' }}</dd></div>
+            {% endif %}
+        </dl>
+    {% else %}
+        <p class="nota">No se encontró al tutor.</p>
+    {% endif %}
+
+    {% if not completa %}
+        <a class="boton boton-turquesa" href="#perfil" data-vista="perfil">Ver perfil completo<svg><use href="#i-chevron"></use></svg></a>
+    {% endif %}
+</section>

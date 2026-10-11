@@ -1,0 +1,61 @@
+{# Chat directo con veterinarios (tabla chat_mensaje) y chat local de HuellaBot #}
+{% set verificados = veterinarios | selectattr('es_verificado') | list %}
+{% set ultimo = mensajes[-1].id_chat_mensaje if mensajes else 0 %}
+
+{# Los veterinarios y los tutores Premium usan el chat con veterinarios; los demás hablan con HuellaBot #}
+<aside class="card chat" id="chat" data-modo="{{ 'vet' if puede_chatear else 'bot' }}"
+       data-url-enviar="{{ url_for('enviar_mensaje_chat', codigo=codigo) }}"
+       data-url-mensajes="{{ url_for('mensajes_chat', codigo=codigo) }}">
+
+    <header class="chat-cabecera">
+        <span class="chat-avatar" id="chat-avatar"><svg><use href="#i-chat"></use></svg></span>
+        <h3 id="chat-titulo">Chat con veterinarios</h3>
+        <button class="chat-cerrar" type="button" data-accion="cerrar-chat" aria-label="Cerrar chat" title="Cerrar chat"><svg><use href="#i-close"></use></svg></button>
+    </header>
+    <p class="chat-sub" id="chat-sub">Resuelve tus dudas y recibe orientación profesional.</p>
+
+    <!-- Mensajes con veterinarios (vienen de la base de datos y se actualizan solos) -->
+    <div class="chat-caja" id="caja-vet" data-ultimo="{{ ultimo }}">
+        {% if puede_chatear %}
+            {% for msg in mensajes %}
+                {% set mio = msg.id_remitente == session.get('id_usuario') %}
+                <div class="msg {{ 'msg-mio' if mio }}">
+                    {% if not mio %}
+                        <span class="msg-avatar"><svg><use href="#i-vet"></use></svg></span>
+                    {% endif %}
+                    <div class="burbuja">
+                        <div class="burbuja-top">
+                            {% if not mio %}
+                                <strong>{{ 'Tutor' if msg.id_remitente == mascota.id_tutor else 'Veterinario' }}</strong>
+                            {% endif %}
+                            <time>{{ msg.created_at.strftime('%H:%M') }}</time>
+                        </div>
+                        <p>{{ msg.mensaje }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <p class="chat-vacio">Todavía no hay mensajes. ¡Escribe el primero!</p>
+            {% endfor %}
+        {% elif es_dueno %}
+            <p class="chat-vacio">El chat directo con veterinarios es parte del plan Premium.<br><a class="enlace" href="{{ url_for('mi_plan') }}">Ver plan Premium</a></p>
+        {% else %}
+            <p class="chat-vacio">El chat con veterinarios es solo para veterinarios y tutores con plan Premium.</p>
+        {% endif %}
+    </div>
+
+    <!-- Conversación con HuellaBot (se arma con JavaScript, no se guarda) -->
+    <div class="chat-caja" id="caja-bot" hidden></div>
+
+    <form class="chat-form" id="chat-form" method="post" action="{{ url_for('enviar_mensaje_chat', codigo=codigo) }}">
+        <input type="text" name="mensaje" id="chat-input" placeholder="Escribe tu mensaje..."
+               autocomplete="off" required {% if not puede_chatear %}disabled{% endif %}>
+        <button type="submit" aria-label="Enviar"><svg><use href="#i-send"></use></svg></button>
+    </form>
+
+    {% if puede_chatear %}
+        <button class="boton-chat" type="button" data-accion="chat-vet"><svg><use href="#i-chat"></use></svg>Chat con veterinarios</button>
+    {% else %}
+        <button class="boton-chat" type="button" data-accion="chat-bot"><svg><use href="#i-robot"></use></svg>Hablar con HuellaBot</button>
+    {% endif %}
+    <p class="chat-pie"><i></i>{{ verificados | length }} {{ 'veterinario verificado' if verificados | length == 1 else 'veterinarios verificados' }} en Huellapet</p>
+</aside>

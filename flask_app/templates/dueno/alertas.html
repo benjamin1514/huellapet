@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
+
+{% block titulo %}Huellapet | Alertas de vacuna de {{ mascota.nombre }}{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Alertas de vacuna de {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_for('mi_mascota', id_mascota=mascota.id_mascota) }}">← Volver a administrar a {{ mascota.nombre }}</a></p>
+
+    <section class="card tarjeta tarjeta-salud">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-bell"></use></svg></span>Alertas programadas</h2>
+
+        <ul class="lista-simple">
+            {% for a in alertas %}
+                <li>
+                    <strong>{{ a.titulo }}</strong>
+                    <span class="etiqueta {{ 'etiqueta-atraso' if a.dias < 0 else 'etiqueta-ok' }}">
+                        {% if a.dias < 0 %}Venció hace {{ -a.dias }} días{% elif a.dias == 0 %}Es hoy{% else %}En {{ a.dias }} días{% endif %}
+                    </span>
+                    <p class="suave">{{ m.fecha_corta(a.fecha) }}{% if a.automatica %} · Recordatorio automático (de tu historial){% endif %}</p>
+                    {% if not a.automatica %}
+                        <form method="post" action="{{ url_for('eliminar_alerta', id_mascota=mascota.id_mascota, id_alerta=a.id) }}">
+                            <button class="boton-texto" type="submit">Eliminar alerta</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no hay alertas.</li>
+            {% endfor %}
+        </ul>
+
+        {% if not premium %}
+            <p class="nota">Los recordatorios automáticos, que se arman con las próximas fechas de su historial, son parte del <a class="enlace" href="{{ url_for('mi_plan') }}">plan Premium</a>.</p>
+        {% endif %}
+    </section>
+
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Programar una alerta</h2>
+
+        <form method="post" action="{{ url_for('crear_alerta', id_mascota=mascota.id_mascota) }}" class="formulario">
+            <label class="campo">Vacuna o recordatorio
+                <input type="text" name="titulo" placeholder="Ej: Vacuna antirrábica" required>
+            </label>
+            <label class="campo">Fecha
+                <input type="date" name="fecha_alerta" required>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-verde boton-auto" type="submit">Programar alerta<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

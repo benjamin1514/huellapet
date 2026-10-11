@@ -1,74 +1,202 @@
-<!doctype html>
-<html lang="es">
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Ficha veterinaria</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block titulo %}Huellapet | Administrar a {{ mascota.nombre }}{% endblock %}
 
-<body>
-    <main class="container py-4">
-        {% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div class="alert alert-{{c}}">{{m}}
-        </div>{% endfor %}{% endwith %}
-        <a href="{{url_for('panel_veterinario')}}">Volver al panel</a>
-        <h1 class="mt-3">{{ mascota.nombre }}</h1>
+{# Librería que dibuja el código QR #}
+{% block librerias %}
+    {% if url_ficha %}<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>{% endif %}
+{% endblock %}
 
-        <h2 class="h4 mt-4">Editar mascota</h2>
-        <form method="post" action="{{url_for('veterinario_editar_mascota',id_mascota=mascota.id_mascota)}}"
-            class="row g-2">
-            <div class="col-md-4"><label>Tutor</label><select name="id_tutor" class="form-select" required>{% for u in
-                    tutores %}<option value="{{u.id_usuario}}" {% if u.id_usuario==mascota.id_tutor %}selected{% endif
-                        %}>{{u.nombre}}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label>Especie</label><select name="id_tipo_especie" class="form-select" required>{%
-                    for x in especies %}<option value="{{x.id}}" {% if x.id==mascota.id_tipo_especie %}selected{% endif
-                        %}>{{x.nombre}}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label>Sexo</label><select name="id_tipo_sexo" class="form-select" required>{% for x
-                    in sexos %}<option value="{{x.id}}" {% if x.id==mascota.id_tipo_sexo %}selected{% endif %}>
-                        {{x.nombre}}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label>Código</label><input name="codigo_huellapet"
-                    value="{{mascota.codigo_huellapet}}" class="form-control" required></div>
-            <div class="col-md-4"><label>Nombre</label><input name="nombre" value="{{mascota.nombre}}"
-                    class="form-control" required></div>
-            <div class="col-md-4"><label>Raza</label><input name="raza" value="{{mascota.raza or ''}}"
-                    class="form-control"></div>
-            <div class="col-md-4"><label>Nacimiento</label><input type="date" name="fecha_nacimiento"
-                    value="{{mascota.fecha_nacimiento or ''}}" class="form-control"></div>
-            <div class="col-md-4"><label>Peso</label><input type="number" step="0.01" name="peso_kg"
-                    value="{{mascota.peso_kg or ''}}" class="form-control"></div>
-            <div class="col-md-4"><label>Foto URL</label><input name="foto_url" value="{{mascota.foto_url or ''}}"
-                    class="form-control"></div>
-            <div class="col-12"><label>Descripción</label><textarea name="descripcion"
-                    class="form-control">{{mascota.descripcion or ''}}</textarea></div>
-            <div class="col-12"><button class="btn btn-primary">Guardar cambios</button></div>
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Administrar a {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_for('panel_veterinario') }}">← Volver al panel</a></p>
+
+    {% if extravio %}
+        <div class="banner-extravio">
+            <svg><use href="#i-alert"></use></svg>
+            <div><strong>{{ mascota.nombre }} está en Modo Mascota Perdida.</strong></div>
+        </div>
+    {% endif %}
+
+    <!-- Accesos rápidos -->
+    <div class="acciones">
+        <a class="boton boton-turquesa boton-auto" href="{{ url_for('dashboard_publico', codigo=mascota.codigo_huellapet) }}">Ver ficha</a>
+        <a class="boton boton-verde boton-auto" href="{{ url_for('veterinario_historial', id_mascota=mascota.id_mascota) }}">Historial médico</a>
+        <a class="boton boton-violeta boton-auto" href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">Documentos</a>
+        <a class="boton boton-claro boton-auto" href="{{ url_for('avistamientos_mascota', id_mascota=mascota.id_mascota) }}">Avistamientos</a>
+
+        <form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"
+              data-confirmar="{{ ('¿Marcar a ' ~ mascota.nombre ~ ' como encontrada?') if extravio else ('¿Reportar a ' ~ mascota.nombre ~ ' como extraviada?') }}">
+            <button class="boton-alerta {{ 'boton-encontrada' if extravio }}" name="extraviado" value="{{ 0 if extravio else 1 }}">
+                <svg><use href="#i-alert"></use></svg>{{ 'Marcar como encontrada' if extravio else 'Reportar extravío' }}
+            </button>
         </form>
+    </div>
 
-        <h2 class="h4 mt-5">Agregar registro clínico</h2>
-        <form method="post" action="{{url_for('veterinario_crear_historial',id_mascota=mascota.id_mascota)}}"
-            class="row g-2 mb-4">
-            <div class="col-md-4"><label>Tipo</label><select name="id_tipo_historial" class="form-select" required>{%
-                    for x in tipos_historial %}<option value="{{x.id}}">{{x.nombre}}</option>{% endfor %}</select></div>
-            <div class="col-md-4"><label>Fecha atención</label><input type="date" name="fecha_atencion"
-                    class="form-control" required></div>
-            <div class="col-md-4"><label>Próxima fecha</label><input type="date" name="proxima_fecha"
-                    class="form-control"></div>
-            <div class="col-12"><label>Título</label><input name="titulo" class="form-control" required></div>
-            <div class="col-12"><label>Descripción</label><textarea name="descripcion" class="form-control"
-                    required></textarea></div>
-            <div class="col-12"><button class="btn btn-success">Agregar al historial</button></div>
+    <!-- Placa NFC / QR -->
+    <section class="card tarjeta tarjeta-docs">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-target"></use></svg></span>Placa NFC y código QR</h2>
+
+        {% if dispositivo %}
+            <p class="nota">Los visitantes solo pueden ver la ficha escaneando este QR o el chip NFC. Imprime el QR y graba esta dirección en el chip.</p>
+            <div class="placa">
+                <div class="qr-caja" id="qr" data-url="{{ url_ficha }}"></div>
+                <dl class="lista-datos">
+                    <div><dt>Dirección del QR y del chip NFC</dt><dd><input class="url-copiable" type="text" readonly value="{{ url_ficha }}" onclick="this.select()"></dd></div>
+                    <div><dt>UID del chip</dt><dd>{{ dispositivo.codigo_uid }}</dd></div>
+                </dl>
+            </div>
+            <form method="post" data-confirmar="Esto desactiva el QR y el chip actuales. ¿Continuar?"
+                  action="{{ url_for('veterinario_eliminar_dispositivo', id_mascota=mascota.id_mascota, id_dispositivo=dispositivo.id_dispositivo_nfc) }}">
+                <button class="boton-texto" type="submit">Eliminar placa (si se perdió o hay que cambiarla)</button>
+            </form>
+        {% else %}
+            <p class="nota">Esta mascota todavía no tiene placa. Crea una para generar su QR y el código del chip NFC.</p>
+            <form method="post" action="{{ url_for('veterinario_crear_dispositivo', id_mascota=mascota.id_mascota) }}" class="formulario">
+                <label class="campo campo-ancho">UID del chip NFC (opcional, si no lo escribes se genera uno)
+                    <input type="text" name="codigo_uid" autocomplete="off">
+                </label>
+                <div class="campo-ancho">
+                    <button class="boton boton-violeta boton-auto" type="submit">Crear placa NFC/QR<svg><use href="#i-chevron"></use></svg></button>
+                </div>
+            </form>
+        {% endif %}
+    </section>
+
+    <!-- Alergias, condiciones y cuidados especiales (se muestran primero en la vista de emergencia) -->
+    <section class="card tarjeta tarjeta-tutor">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-alert"></use></svg></span>Alergias y cuidados especiales</h2>
+
+        <ul class="lista-simple">
+            {% for c in condiciones %}
+                <li>
+                    <strong>{{ c.nombre_condicion }}</strong> <span class="etiqueta">{{ c.gravedad }}</span>
+                    {% if c.observaciones %}<p class="suave">{{ c.observaciones }}</p>{% endif %}
+
+                    <details class="editar">
+                        <summary>Editar</summary>
+                        <form method="post" action="{{ url_for('veterinario_editar_alergia', id_alergia=c.id_alergia_condicion) }}" class="formulario">
+                            <label class="campo">Alergia o condición
+                                <input type="text" name="nombre_condicion" value="{{ c.nombre_condicion }}" required>
+                            </label>
+                            <label class="campo">Gravedad
+                                <select name="gravedad">
+                                    {% for g in ['Leve', 'Moderada', 'Grave'] %}<option value="{{ g }}" {% if g == c.gravedad %}selected{% endif %}>{{ g }}</option>{% endfor %}
+                                </select>
+                            </label>
+                            <label class="campo campo-ancho">Cuidados especiales
+                                <textarea name="observaciones" rows="2">{{ c.observaciones or '' }}</textarea>
+                            </label>
+                            <div class="campo-ancho">
+                                <button class="boton boton-turquesa boton-auto" type="submit">Guardar cambios</button>
+                            </div>
+                        </form>
+                    </details>
+
+                    <form method="post" data-confirmar="¿Eliminar este registro?" action="{{ url_for('veterinario_eliminar_alergia', id_alergia=c.id_alergia_condicion) }}">
+                        <button class="boton-texto" type="submit">Eliminar</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="vacio">No hay alergias ni cuidados especiales registrados.</li>
+            {% endfor %}
+        </ul>
+
+        <form method="post" action="{{ url_for('veterinario_crear_alergia', id_mascota=mascota.id_mascota) }}" class="formulario">
+            <label class="campo">Alergia o condición
+                <input type="text" name="nombre_condicion" placeholder="Ej: Alergia a la penicilina" required>
+            </label>
+            <label class="campo">Gravedad
+                <select name="gravedad">
+                    <option value="Leve">Leve</option>
+                    <option value="Moderada" selected>Moderada</option>
+                    <option value="Grave">Grave</option>
+                </select>
+            </label>
+            <label class="campo campo-ancho">Cuidados especiales
+                <textarea name="observaciones" rows="2"></textarea>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-turquesa boton-auto" type="submit">Agregar<svg><use href="#i-plus"></use></svg></button>
+            </div>
         </form>
+    </section>
 
-        <h2 class="h4">Historial clínico</h2>{% for h in historial %}<div class="border rounded p-2 mb-2">
-            <strong>{{h.tipo}} — {{h.titulo}}</strong><br>{{h.fecha_atencion}} —
-            {{h.veterinario_nombre}}<br>{{h.descripcion}}</div>{% else %}<p>Sin registros clínicos.</p>{% endfor %}
-        <h2 class="h4 mt-4">Condiciones</h2>{% for c in condiciones %}<p>{{ c.nombre_condicion }}</p>{% else %}<p>Sin
-            condiciones registradas.</p>{% endfor %}
-        <form method="post" action="{{url_for('veterinario_eliminar_mascota',id_mascota=mascota.id_mascota)}}"
-            class="mt-5" onsubmit="return confirm('¿Eliminar esta mascota?')"><button class="btn btn-danger">Eliminar
-                mascota</button></form>
-    </main>
-</body>
+    <!-- Editar datos -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-user"></use></svg></span>Datos de la mascota</h2>
 
-</html>
+        <form method="post" action="{{ url_for('veterinario_editar_mascota', id_mascota=mascota.id_mascota) }}" class="formulario">
+            <input type="hidden" name="id_tutor" value="{{ mascota.id_tutor }}">
+
+            <label class="campo">Nombre
+                <input type="text" name="nombre" value="{{ mascota.nombre }}" required>
+            </label>
+            <label class="campo">Raza
+                <input type="text" name="raza" value="{{ mascota.raza or '' }}">
+            </label>
+            <label class="campo">Especie
+                <select name="id_tipo_especie" required>
+                    {% for e in especies %}<option value="{{ e.id }}" {% if e.id == mascota.id_tipo_especie %}selected{% endif %}>{{ e.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Sexo
+                <select name="id_tipo_sexo" required>
+                    {% for s in sexos %}<option value="{{ s.id }}" {% if s.id == mascota.id_tipo_sexo %}selected{% endif %}>{{ s.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Fecha de nacimiento
+                <input type="date" name="fecha_nacimiento" value="{{ mascota.fecha_nacimiento or '' }}">
+            </label>
+            <label class="campo">Peso (kg)
+                <input type="number" step="0.01" name="peso_kg" value="{{ mascota.peso_kg or '' }}">
+            </label>
+            <label class="campo campo-ancho">Descripción
+                <textarea name="descripcion" rows="3">{{ mascota.descripcion or '' }}</textarea>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-turquesa boton-auto" type="submit">Guardar cambios<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Tutor (solo lectura) -->
+    <section class="card tarjeta tarjeta-tutor">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-user"></use></svg></span>Tutor</h2>
+        {% if tutor %}
+            <dl class="lista-datos en-columnas">
+                <div><dt>Nombre</dt><dd>{{ tutor.nombre }}</dd></div>
+                <div><dt>Teléfono</dt><dd>{{ tutor.telefono or 'No registrado' }}</dd></div>
+                <div><dt>Correo</dt><dd>{{ tutor.email }}</dd></div>
+                <div><dt>Dirección</dt><dd>{{ tutor.direccion or 'No registrada' }}</dd></div>
+            </dl>
+        {% endif %}
+    </section>
+
+    <!-- Foto -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-paw"></use></svg></span>Fotografía</h2>
+
+        <form method="post" action="{{ url_for('cambiar_foto_mascota', id_mascota=mascota.id_mascota) }}" enctype="multipart/form-data" class="formulario">
+            <label class="campo campo-ancho">Nueva foto
+                <input type="file" name="foto" accept="image/*" required>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-claro boton-auto" type="submit">Subir foto</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Eliminar -->
+    <section class="card tarjeta zona-peligro">
+        <h2 class="titulo-tarjeta">Eliminar mascota</h2>
+        <p class="nota">Se borra la ficha completa de {{ mascota.nombre }}. Esta acción no se puede deshacer.</p>
+        <form method="post" data-confirmar="¿Eliminar a {{ mascota.nombre }} y toda su ficha?"
+              action="{{ url_for('veterinario_eliminar_mascota', id_mascota=mascota.id_mascota) }}">
+            <button class="boton-alerta" type="submit">Eliminar mascota</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

@@ -53,3 +53,11 @@ class HistorialMedico:
             "DELETE FROM historial_medico WHERE id_historial_medico=%(id)s;",
             {"id": id_historial_medico},
         )
+
+    # NUEVO: guarda la firma digital del veterinario (columna firma_digital de cambios_pitch.sql)
+    @classmethod
+    def set_firma(cls, id_historial_medico, firma):
+        return connectToMySQL("huellapet_db").query_db(
+            "UPDATE historial_medico SET firma_digital=%(firma)s WHERE id_historial_medico=%(id)s;",
+            {"id": id_historial_medico, "firma": firma},
+        )

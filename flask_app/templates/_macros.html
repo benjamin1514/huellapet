@@ -1,0 +1,14 @@
+{# Pequeñas funciones para mostrar fechas y pesos de forma bonita #}
+{% set meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'] %}
+
+{# 20/04/2024 #}
+{% macro fecha_corta(f) %}{% if f %}{{ f.strftime('%d/%m/%Y') }}{% endif %}{% endmacro %}
+
+{# 15 de marzo de 2021 #}
+{% macro fecha_larga(f) %}{% if f %}{{ f.day }} de {{ meses[f.month - 1] }} de {{ f.year }}{% endif %}{% endmacro %}
+
+{# 20/04/2024, 10:30 #}
+{% macro fecha_hora(f) %}{% if f %}{{ f.strftime('%d/%m/%Y, %H:%M') }}{% endif %}{% endmacro %}
+
+{# 28 kg #}
+{% macro peso(p) %}{% if p %}{{ '%g'|format(p) }} kg{% endif %}{% endmacro %}

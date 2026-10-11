@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Huellapet | Administrar a {{ mascota.nombre }}{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Administrar a {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_for('mi_cuenta') }}">← Volver a mi cuenta</a></p>
+
+    {% if extravio %}
+        <div class="banner-extravio">
+            <svg><use href="#i-alert"></use></svg>
+            <div><strong>{{ mascota.nombre }} está en Modo Mascota Perdida.</strong></div>
+        </div>
+    {% endif %}
+
+    <!-- Accesos rápidos -->
+    <div class="acciones">
+        <a class="boton boton-turquesa boton-auto" href="{{ url_for('dashboard_publico', codigo=mascota.codigo_huellapet) }}">Ver ficha</a>
+        <a class="boton boton-violeta boton-auto" href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">Documentos</a>
+        <a class="boton boton-verde boton-auto" href="{{ url_for('alertas_mascota', id_mascota=mascota.id_mascota) }}">Alertas de vacuna</a>
+        <a class="boton boton-claro boton-auto" href="{{ url_for('avistamientos_mascota', id_mascota=mascota.id_mascota) }}">Avistamientos</a>
+
+        <form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"
+              data-confirmar="{{ ('¿Desactivar el Modo Mascota Perdida de ' ~ mascota.nombre ~ '?') if extravio else ('¿Activar el Modo Mascota Perdida de ' ~ mascota.nombre ~ '?') }}">
+            <button class="boton-alerta {{ 'boton-encontrada' if extravio }}" name="extraviado" value="{{ 0 if extravio else 1 }}">
+                <svg><use href="#i-alert"></use></svg>{{ 'Mi mascota apareció' if extravio else 'Activar Modo Mascota Perdida' }}
+            </button>
+        </form>
+    </div>
+
+    <!-- Perfil de la mascota -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-user"></use></svg></span>Perfil de la mascota</h2>
+
+        <form method="post" action="{{ url_for('editar_mi_mascota', id_mascota=mascota.id_mascota) }}" class="formulario">
+            {# La especie y el sexo no se cambian aquí, se envían tal como están #}
+            <input type="hidden" name="id_tipo_especie" value="{{ mascota.id_tipo_especie }}">
+            <input type="hidden" name="id_tipo_sexo" value="{{ mascota.id_tipo_sexo }}">
+
+            <label class="campo">Nombre
+                <input type="text" name="nombre" value="{{ mascota.nombre }}" required>
+            </label>
+            <label class="campo">Raza
+                <input type="text" name="raza" value="{{ mascota.raza or '' }}">
+            </label>
+            <label class="campo">Fecha de nacimiento
+                <input type="date" name="fecha_nacimiento" value="{{ mascota.fecha_nacimiento or '' }}">
+            </label>
+            <label class="campo">Peso (kg)
+                <input type="number" step="0.01" name="peso_kg" value="{{ mascota.peso_kg or '' }}">
+            </label>
+            <label class="campo campo-ancho">Descripción
+                <textarea name="descripcion" rows="3">{{ mascota.descripcion or '' }}</textarea>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-turquesa boton-auto" type="submit">Guardar cambios<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Foto -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-paw"></use></svg></span>Fotografía</h2>
+
+        <form method="post" action="{{ url_for('cambiar_foto_mascota', id_mascota=mascota.id_mascota) }}" enctype="multipart/form-data" class="formulario">
+            <label class="campo campo-ancho">Nueva foto
+                <input type="file" name="foto" accept="image/*" required>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-claro boton-auto" type="submit">Subir foto</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

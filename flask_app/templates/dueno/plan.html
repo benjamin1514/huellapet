@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Huellapet | Mi plan{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Mi plan</h1>
+    <p><a class="enlace" href="{{ url_for('mi_cuenta') }}">← Volver a mi cuenta</a></p>
+
+    <div class="planes">
+        <section class="card tarjeta plan {{ 'plan-actual' if not premium }}">
+            <h2 class="titulo-tarjeta">Plan Gratis <span class="precio">$0</span></h2>
+            <ul class="lista-plan">
+                <li>Ficha de emergencia por NFC/QR</li>
+                <li>Agendamiento de citas</li>
+                <li>Chatbot HuellaBot</li>
+                <li>Hasta {{ limite }} documentos guardados</li>
+            </ul>
+            {% if not premium %}<p class="etiqueta etiqueta-ok">Tu plan actual</p>{% endif %}
+        </section>
+
+        <section class="card tarjeta plan plan-premium {{ 'plan-actual' if premium }}">
+            <h2 class="titulo-tarjeta">Plan Premium <span class="precio">${{ '{:,}'.format(precio).replace(',', '.') }} / mes</span></h2>
+            <ul class="lista-plan">
+                <li>Almacenamiento médico ilimitado en la nube</li>
+                <li>Chat directo con veterinarios</li>
+                <li>Recordatorios automáticos</li>
+            </ul>
+            {% if premium %}
+                <p class="etiqueta etiqueta-ok">Tu plan actual</p>
+                <form method="post" data-confirmar="¿Cancelar el plan Premium?" action="{{ url_for('cancelar_premium') }}">
+                    <button class="boton-texto" type="submit">Cancelar plan Premium</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ url_for('activar_premium') }}">
+                    <button class="boton boton-violeta" type="submit">Activar Premium<svg><use href="#i-chevron"></use></svg></button>
+                </form>
+                <p class="nota">Aún no hay una pasarela de pago conectada: el pago se registra como simulado y no se cobra nada.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    {% if not premium %}
+        <p class="nota">Documentos usados: {{ usados }} de {{ limite }}.</p>
+    {% endif %}
+</main>
+{% endblock %}

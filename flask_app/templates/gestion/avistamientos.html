@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
+
+{% block titulo %}Huellapet | Avistamientos de {{ mascota.nombre }}{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Avistamientos de {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_volver }}">← Volver a administrar a {{ mascota.nombre }}</a></p>
+
+    <section class="card tarjeta">
+        <p class="nota">Cada vez que alguien escanea la placa con la mascota extraviada y comparte su ubicación, aparece aquí.</p>
+
+        <ul class="lista-simple">
+            {% for a in avistamientos %}
+                <li>
+                    <strong>{{ m.fecha_hora(a.created_at) }}</strong>
+                    <p class="suave">
+                        Latitud {{ a.latitud }}, longitud {{ a.longitud }}
+                        {% if a.precision_metros %}· precisión de unos {{ '%g'|format(a.precision_metros) }} m{% endif %}
+                    </p>
+                    <a class="enlace" target="_blank" rel="noopener" href="https://www.google.com/maps?q={{ a.latitud }},{{ a.longitud }}">Ver en el mapa</a>
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no hay avistamientos.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
+{% endblock %}

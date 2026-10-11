@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Huellapet{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/huellapet.css') }}">
+    <!-- PWA: la ficha se puede instalar en el celular -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#0d9488">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='image/icono-192.png') }}">
+</head>
+
+<body {% block atributos_body %}{% endblock %}>
+    {% include '_iconos.html' %}
+
+    <!-- ===== BARRA SUPERIOR ===== -->
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('acceso_dashboard') }}">
+            <svg class="brand-icon" fill="currentColor"><use href="#i-paw"></use></svg>
+            <span>Huellapet</span>
+        </a>
+        <nav class="topnav">
+            <a class="topnav-link" href="{{ url_for('acceso_dashboard') }}"><svg><use href="#i-home"></use></svg>Inicio</a>
+            {# El menú cambia según quién entró. El acceso de veterinarios no tiene enlace en el sitio #}
+            {% set rol = rol_actual() %}
+            {% if rol == 'veterinario' %}
+                <a class="topnav-link" href="{{ url_for('panel_veterinario') }}"><svg><use href="#i-user"></use></svg>Panel veterinario</a>
+                <a class="topnav-link" href="{{ url_for('logout') }}"><svg><use href="#i-close"></use></svg>Cerrar sesión</a>
+            {% elif rol == 'tutor' %}
+                <a class="topnav-link" href="{{ url_for('mi_cuenta') }}"><svg><use href="#i-user"></use></svg>Mi cuenta</a>
+                <a class="topnav-link" href="{{ url_for('logout') }}"><svg><use href="#i-close"></use></svg>Cerrar sesión</a>
+            {% else %}
+                <a class="topnav-link" href="{{ url_for('login_tutor') }}"><svg><use href="#i-user"></use></svg>Iniciar sesión</a>
+                <a class="topnav-link" href="{{ url_for('registro_tutor') }}"><svg><use href="#i-plus"></use></svg>Crear cuenta</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- ===== MENSAJES (flash) ===== -->
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+        <div class="avisos">
+            {% for categoria, texto in mensajes %}
+                <p class="aviso aviso-{{ categoria }}">{{ texto }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+
+    {% block librerias %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/huellapet.js') }}"></script>
+</body>
+
+</html>

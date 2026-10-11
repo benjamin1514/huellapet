@@ -1,0 +1,64 @@
+{# Barra "Ubicación y extravío" (tabla ubicacion_extravio y avistamiento) #}
+{% import '_macros.html' as m %}
+{% set notificaciones = extravio and extravio.notificaciones_activas %}
+
+<section class="card barra-extravio {{ 'barra-alerta' if extravio }}">
+
+    <!-- Estado y botón del tutor -->
+    <div class="bloque">
+        <h3><svg><use href="#i-pin"></use></svg>Ubicación y extravío</h3>
+
+        {% if extravio %}
+            <p>{{ mascota.nombre }} está reportado como extraviado.</p>
+        {% else %}
+            <p>Si {{ mascota.nombre }} se pierde, puedes ayudarnos a encontrarlo.</p>
+        {% endif %}
+
+        {# Modo Mascota Perdida: lo activan el tutor o un veterinario #}
+        {% if es_vet or es_dueno %}
+            <form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"
+                  data-confirmar="{{ ('¿Marcar a ' ~ mascota.nombre ~ ' como encontrada?') if extravio else ('¿Reportar a ' ~ mascota.nombre ~ ' como extraviada?') }}">
+                <button class="boton-alerta {{ 'boton-encontrada' if extravio }}" name="extraviado" value="{{ 0 if extravio else 1 }}">
+                    <svg><use href="#i-alert"></use></svg>{{ 'Marcar como encontrada' if extravio else 'Reportar extravío' }}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Última ubicación -->
+    <div class="bloque bloque-ubicacion">
+        <span class="icono-circulo"><svg><use href="#i-target"></use></svg></span>
+        <div>
+            <h5>Última ubicación registrada</h5>
+            {% if avistamientos %}
+                {# Los avistamientos solo se muestran al tutor #}
+                <p><a class="enlace" target="_blank" rel="noopener"
+                      href="https://www.google.com/maps?q={{ avistamientos[0].latitud }},{{ avistamientos[0].longitud }}">Ver avistamiento en el mapa</a></p>
+                <p class="suave">{{ m.fecha_hora(avistamientos[0].created_at) }}</p>
+            {% elif extravio and extravio.ultima_ubicacion %}
+                <p>{{ extravio.ultima_ubicacion }}</p>
+                <p class="suave">{{ m.fecha_hora(extravio.fecha_registro) }}</p>
+            {% elif extravio %}
+                <p>Aún no hay una ubicación registrada.</p>
+                <p class="suave">Reportado: {{ m.fecha_hora(extravio.fecha_registro) }}</p>
+            {% else %}
+                <p>Sin ubicación registrada.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Notificaciones (se guardan junto con el reporte de extravío) -->
+    <div class="bloque bloque-notif">
+        <span class="icono-campana"><svg><use href="#i-bell"></use></svg></span>
+        <div>
+            <h5>{{ 'Notificaciones activadas' if notificaciones else 'Notificaciones desactivadas' }}</h5>
+            {% if notificaciones %}
+                <p>Si alguien escanea la placa de {{ mascota.nombre }}, el tutor verá el avistamiento en su portal.</p>
+            {% else %}
+                <p>Se activan con el Modo Mascota Perdida.</p>
+            {% endif %}
+        </div>
+        <span class="interruptor {{ 'encendido' if notificaciones }}" aria-hidden="true"></span>
+    </div>
+
+</section>

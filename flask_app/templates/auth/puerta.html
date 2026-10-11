@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Huellapet | Identificación profesional{% endblock %}
+
+{% block contenido %}
+<main class="pagina pagina-centrada">
+    <section class="card caja-acceso">
+        <span class="acceso-icono"><svg><use href="#i-shield"></use></svg></span>
+        <h1>Identificación profesional</h1>
+        <p class="suave">Esta zona es solo para veterinarios. Identifícate para continuar.</p>
+
+        <!-- Veterinario que ya tiene cuenta -->
+        <form method="post" class="formulario-simple">
+            <label class="campo">Número de colegiado
+                <input type="text" name="numero_colegiado" autocomplete="off" required autofocus>
+            </label>
+            <button class="boton boton-turquesa" type="submit">Continuar<svg><use href="#i-chevron"></use></svg></button>
+        </form>
+
+        <!-- Veterinario nuevo: necesita el código de invitación de la clínica -->
+        {% if registro_habilitado %}
+            <details class="editar">
+                <summary>Soy un veterinario nuevo</summary>
+                <form method="post" class="formulario-simple">
+                    <label class="campo">Código de invitación
+                        <input type="password" name="codigo_invitacion" autocomplete="off" required>
+                    </label>
+                    <button class="boton boton-claro" type="submit">Continuar<svg><use href="#i-chevron"></use></svg></button>
+                </form>
+            </details>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,40 @@
+{# Resumen de salud: toma el último registro de cada tipo de la tabla historial_medico #}
+{% import '_macros.html' as m %}
+{% set tipos = [('Vacuna', 'Vacunas'), ('Desparasitación', 'Desparasitación'), ('Control', 'Control veterinario')] %}
+
+<section class="card tarjeta tarjeta-salud">
+    <h3 class="titulo-tarjeta">
+        <span class="icono-titulo"><svg><use href="#i-heart-pulse"></use></svg></span>Salud
+    </h3>
+
+    <ul class="lista-salud">
+        {% for tipo, titulo in tipos %}
+            {# "salud" viene ordenada de la más nueva a la más antigua, así que el primero es el último registro #}
+            {% set registro = salud | selectattr('tipo', 'equalto', tipo) | first %}
+            <li>
+                {% if registro %}
+                    {# Está al día si no tiene próxima fecha o si esa fecha todavía no llega #}
+                    {% set al_dia = (not registro.proxima_fecha) or registro.proxima_fecha >= hoy %}
+                    <span class="visto {{ 'ok' if al_dia else 'atrasado' }}">
+                        <svg><use href="#{{ 'i-check' if al_dia else 'i-calendar' }}"></use></svg>
+                    </span>
+                    <div>
+                        <h6>{{ titulo }}
+                            {% if registro.proxima_fecha %}
+                                <span class="etiqueta {{ 'etiqueta-ok' if al_dia else 'etiqueta-atraso' }}">{{ 'Al día' if al_dia else 'Por renovar' }}</span>
+                            {% endif %}
+                        </h6>
+                        <p>Última: {{ m.fecha_corta(registro.fecha_atencion) }}</p>
+                    </div>
+                {% else %}
+                    <span class="visto vacio"><svg><use href="#i-calendar"></use></svg></span>
+                    <div><h6>{{ titulo }}</h6><p>Sin registros todavía</p></div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if not completa %}
+        <a class="boton boton-verde" href="#historial" data-vista="historial">Ver historial<svg><use href="#i-chevron"></use></svg></a>
+    {% endif %}
+</section>

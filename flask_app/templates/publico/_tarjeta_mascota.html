@@ -1,0 +1,53 @@
+{# Tarjeta grande con la foto y los datos de la mascota (tabla mascota) #}
+{% import '_macros.html' as m %}
+<section class="card tarjeta-mascota">
+
+    <div class="foto-caja">
+        {% if mascota.foto_url %}
+            {# Al tocar la foto se abre completa en otra pestaña #}
+            <a href="{{ url_for('static', filename=mascota.foto_url) }}" target="_blank" rel="noopener" title="Ver la foto completa">
+                <img class="foto" src="{{ url_for('static', filename=mascota.foto_url) }}" alt="Foto de {{ mascota.nombre }}">
+            </a>
+        {% else %}
+            <div class="foto foto-vacia"><svg fill="currentColor"><use href="#i-paw"></use></svg></div>
+        {% endif %}
+    </div>
+
+    <div class="datos">
+        <h2 class="nombre">
+            {{ mascota.nombre }}
+            {# El sello aparece cuando un veterinario ya registró algo en la ficha #}
+            {% if salud %}
+                <svg class="sello" title="Ficha con registros de un veterinario"><use href="#i-seal"></use></svg>
+            {% endif %}
+        </h2>
+
+        <p class="dato">
+            <svg fill="currentColor"><use href="#i-paw"></use></svg>
+            {{ mascota.especie }}{% if mascota.raza %} · {{ mascota.raza }}{% endif %}
+        </p>
+
+        {% if mascota.fecha_nacimiento %}
+            <p class="dato"><svg><use href="#i-calendar"></use></svg>{{ m.fecha_larga(mascota.fecha_nacimiento) }}</p>
+        {% endif %}
+
+        <p class="chip chip-{{ mascota.sexo | lower }}">
+            <svg><use href="#{{ 'i-female' if mascota.sexo == 'Hembra' else 'i-male' }}"></use></svg>{{ mascota.sexo }}
+        </p>
+
+        {% if mascota.peso_kg %}
+            <p class="chip chip-peso"><svg><use href="#i-weight"></use></svg>{{ m.peso(mascota.peso_kg) }}</p>
+        {% endif %}
+
+        <p class="codigo"><span>ID</span>ID Huellapet: <strong>{{ mascota.codigo_huellapet }}</strong></p>
+    </div>
+
+    <div class="sobre">
+        <h3>Sobre {{ mascota.nombre }}</h3>
+        <p>{{ mascota.descripcion or 'Todavía no hay una descripción de ' ~ mascota.nombre ~ '.' }}</p>
+        <button class="corazon" type="button" aria-pressed="true" aria-label="Me gusta" data-accion="corazon">
+            <svg><use href="#i-heart"></use></svg>
+        </button>
+    </div>
+
+</section>

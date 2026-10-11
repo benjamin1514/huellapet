@@ -1,0 +1,25 @@
+{# Documentos: solo los ve el tutor (tabla documento) #}
+<section class="card tarjeta tarjeta-docs">
+    <h3 class="titulo-tarjeta">
+        <span class="icono-titulo"><svg><use href="#i-doc-badge"></use></svg></span>Documentos
+    </h3>
+
+    {% if ver_privado %}
+        <ul class="lista-docs">
+            {% for d in documentos[:4] %}
+                <li>
+                    <a href="{{ url_for('static', filename=d.archivo_url) }}" target="_blank" rel="noopener">
+                        <span class="icono-doc color-{{ loop.index0 % 4 }}"><svg><use href="#i-file-small"></use></svg></span>
+                        {{ d.nombre_doc }}
+                        <svg class="flecha"><use href="#i-chevron"></use></svg>
+                    </a>
+                </li>
+            {% else %}
+                <li class="vacio">Aún no hay documentos guardados.</li>
+            {% endfor %}
+        </ul>
+        <a class="boton boton-violeta" href="#documentos" data-vista="documentos">Ver todos<svg><use href="#i-chevron"></use></svg></a>
+    {% else %}
+        <p class="privado"><svg><use href="#i-lock"></use></svg>Los documentos son privados y solo los puede ver el tutor o un veterinario.</p>
+    {% endif %}
+</section>

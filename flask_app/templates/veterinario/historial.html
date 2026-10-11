@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
+
+{% block titulo %}Huellapet | Historial de {{ mascota.nombre }}{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Historial clínico de {{ mascota.nombre }}</h1>
+    <p><a class="enlace" href="{{ url_for('veterinario_mascota', id_mascota=mascota.id_mascota) }}">← Volver a la ficha veterinaria</a></p>
+
+    <!-- Agregar un registro -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Agregar registro</h2>
+
+        <form method="post" action="{{ url_for('veterinario_crear_historial', id_mascota=mascota.id_mascota) }}" class="formulario">
+            <label class="campo">Tipo
+                <select name="id_tipo_historial" required>
+                    {% for t in tipos_historial %}<option value="{{ t.id }}">{{ t.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Título
+                <input type="text" name="titulo" required>
+            </label>
+            <label class="campo">Fecha de atención
+                <input type="date" name="fecha_atencion" required>
+            </label>
+            <label class="campo">Próxima fecha
+                <input type="date" name="proxima_fecha">
+            </label>
+            <label class="campo campo-ancho">Descripción
+                <textarea name="descripcion" rows="3" required></textarea>
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-verde boton-auto" type="submit">Firmar y agregar al historial<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Registros existentes -->
+    <section class="card tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-calendar"></use></svg></span>Registros</h2>
+
+        <ul class="lista-simple">
+            {% for h in historial %}
+                <li>
+                    <strong>{{ h.titulo }}</strong> <span class="etiqueta">{{ h.tipo }}</span>
+                    <p class="suave">{{ m.fecha_corta(h.fecha_atencion) }}</p>
+                    <p>{{ h.descripcion }}</p>
+                    {% if h.firma_ok %}
+                        <p class="firma firma-ok"><svg><use href="#i-check"></use></svg>Firmado digitalmente por {{ h.veterinario_nombre }}</p>
+                    {% else %}
+                        <p class="firma firma-mala"><svg><use href="#i-alert"></use></svg>Registro de {{ h.veterinario_nombre }} sin firma válida</p>
+                    {% endif %}
+
+                    {# Solo el veterinario que firmó el registro puede editarlo o eliminarlo #}
+                    {% if h.id_veterinario == session.get('id_usuario') %}
+
+                    <details class="editar">
+                        <summary>Editar</summary>
+                        <form method="post" action="{{ url_for('veterinario_editar_historial', id_historial=h.id_historial_medico) }}" class="formulario">
+                            <label class="campo">Tipo
+                                <select name="id_tipo_historial" required>
+                                    {% for t in tipos_historial %}
+                                        <option value="{{ t.id }}" {% if t.id == h.id_tipo_historial %}selected{% endif %}>{{ t.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="campo">Título
+                                <input type="text" name="titulo" value="{{ h.titulo }}" required>
+                            </label>
+                            <label class="campo">Fecha de atención
+                                <input type="date" name="fecha_atencion" value="{{ h.fecha_atencion }}" required>
+                            </label>
+                            <label class="campo">Próxima fecha
+                                <input type="date" name="proxima_fecha" value="{{ h.proxima_fecha or '' }}">
+                            </label>
+                            <label class="campo campo-ancho">Descripción
+                                <textarea name="descripcion" rows="3" required>{{ h.descripcion }}</textarea>
+                            </label>
+                            <div class="campo-ancho">
+                                <button class="boton boton-turquesa boton-auto" type="submit">Guardar cambios</button>
+                            </div>
+                        </form>
+                    </details>
+
+                    <form method="post" data-confirmar="¿Eliminar este registro?"
+                          action="{{ url_for('veterinario_eliminar_historial', id_historial=h.id_historial_medico) }}">
+                        <button class="boton-texto" type="submit">Eliminar registro</button>
+                    </form>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no hay registros clínicos.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
+{% endblock %}

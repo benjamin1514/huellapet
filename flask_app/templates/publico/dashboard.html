@@ -1,34 +1,237 @@
-<!doctype html>
-<html lang="es">
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Ficha HuellaPet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block titulo %}Huellapet | {{ mascota.nombre }}{% endblock %}
 
-<body>
-    <main class="container py-4">{% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div
-            class="alert alert-{{c}}">{{m}}</div>{% endfor %}{% endwith %}<h1>{{ mascota.nombre }}</h1>
-        <p>{{ mascota.especie }} · {{ mascota.raza or '' }}</p>{% if extravio %}<div class="alert alert-danger">
-            <strong>Mascota reportada como extraviada.</strong>
-            <p id="geo-status">Solicitando ubicación para registrar el avistamiento…</p>
-        </div>{% endif %}<h2>Salud pública</h2>{% for item in salud %}<article><strong>{{ item.titulo }}</strong> — {{
-            item.fecha_atencion }}<p>{{ item.descripcion }}</p>
-        </article>{% else %}<p>Sin registros de salud.</p>{% endfor %}<h3>Alergias y condiciones</h3>{% for c in
-        condiciones %}<p>{{ c.nombre_condicion }} ({{ c.gravedad }})</p>{% else %}<p>Sin condiciones registradas.</p>{%
-        endfor %}{% if es_dueno %}
-        <hr>
-        <h2>Área privada del dueño</h2><a
-            href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">Documentos privados</a>
-        <form method="post" action="{{ url_for('cambiar_extravio', id_mascota=mascota.id_mascota) }}"><button
-                name="extraviado" value="{{ 0 if extravio else 1 }}" class="btn btn-warning mt-2">{{ 'Marcar como
-                encontrada' if extravio else 'Reportar extravío' }}</button></form>{% endif %}{% if extravio %}
-        <script>navigator.geolocation?.getCurrentPosition(async p => { const r = await fetch("{{ url_for('registrar_ubicacion',codigo=mascota.codigo_huellapet) }}", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ latitud: p.coords.latitude, longitud: p.coords.longitude, precision_metros: p.coords.accuracy }) }); document.getElementById('geo-status').textContent = r.ok ? 'Ubicación del avistamiento registrada.' : 'No se pudo registrar la ubicación.' }, () => { document.getElementById('geo-status').textContent = 'No se compartió la ubicación.' });</script>
+{# Estos datos los lee el JavaScript. Si la mascota está extraviada y quien mira NO es el tutor, se pide su ubicación #}
+{% block atributos_body %}class="pagina-ficha" data-nombre="{{ mascota.nombre }}"
+    {% if extravio and not ver_privado %}data-url-ubicacion="{{ url_for('registrar_ubicacion', codigo=codigo) }}"{% endif %}{% endblock %}
+
+{% block contenido %}
+<div class="ficha">
+
+    <!-- ===== MENÚ LATERAL ===== -->
+    <aside class="menu">
+        <nav class="menu-links">
+            <a href="#resumen" class="menu-link activo" data-vista="resumen"><svg><use href="#i-home"></use></svg>Resumen</a>
+            <a href="#perfil" class="menu-link" data-vista="perfil"><svg><use href="#i-user"></use></svg>Perfil</a>
+            <a href="#salud" class="menu-link" data-vista="salud"><svg><use href="#i-heart-pulse"></use></svg>Salud</a>
+            <a href="#historial" class="menu-link" data-vista="historial"><svg><use href="#i-calendar"></use></svg>Historial</a>
+            <a href="#documentos" class="menu-link" data-vista="documentos"><svg><use href="#i-doc"></use></svg>Documentos</a>
+            <a href="#contactos" class="menu-link" data-vista="contactos"><svg><use href="#i-phone"></use></svg>Contactos de emergencia</a>
+            <a href="#ubicacion" class="menu-link" data-vista="ubicacion"><svg><use href="#i-pin"></use></svg>Ubicación y extravío</a>
+        </nav>
+
+        <div class="huellabot">
+            <div class="huellabot-cabecera">
+                <span class="huellabot-avatar"><svg><use href="#i-robot"></use></svg></span>
+                <div>
+                    <h6>HuellaBot</h6>
+                    <p>Asistente virtual</p>
+                </div>
+            </div>
+            <p class="huellabot-texto">¿Tienes dudas? Estoy aquí para ayudarte.</p>
+            <button class="huellabot-boton" type="button" data-accion="chat-bot"><svg><use href="#i-chat"></use></svg>Iniciar chat</button>
+        </div>
+    </aside>
+
+    <!-- ===== SECCIONES ===== -->
+    <main class="vistas">
+
+        {# Solo el tutor o un veterinario pueden modificar la información #}
+        {% if ver_privado %}
+            <div class="barra-vet">
+                <span>{{ 'Estás viendo la ficha como veterinario.' if es_vet else 'Esta es la ficha de tu mascota.' }}</span>
+                <a class="boton boton-claro boton-auto" href="{{ url_for('veterinario_mascota' if es_vet else 'mi_mascota', id_mascota=mascota.id_mascota) }}">Administrar mascota<svg><use href="#i-chevron"></use></svg></a>
+            </div>
         {% endif %}
-    </main>
-</body>
 
-</html>
+        {# Aviso para quien encuentra una mascota extraviada #}
+        {% if extravio %}
+            <div class="banner-extravio" role="alert">
+                <svg><use href="#i-alert"></use></svg>
+                <div>
+                    <strong>{{ mascota.nombre }} está reportado como extraviado.</strong>
+                    {% if not ver_privado %}
+                        <span id="estado-ubicacion">Si lo encontraste, comparte tu ubicación para avisar al tutor.</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- RESUMEN -->
+        <div class="vista activa" id="vista-resumen">
+            {% include 'publico/_emergencia.html' %}
+            {% include 'publico/_tarjeta_mascota.html' %}
+            <div class="trio">
+                {% set completa = false %}
+                {% include 'publico/_tarjeta_tutor.html' %}
+                {% include 'publico/_tarjeta_salud.html' %}
+                {% include 'publico/_tarjeta_documentos.html' %}
+            </div>
+            {% include 'publico/_barra_extravio.html' %}
+        </div>
+
+        <!-- PERFIL -->
+        <div class="vista" id="vista-perfil">
+            {% include 'publico/_tarjeta_mascota.html' %}
+            {% set completa = true %}
+            {% include 'publico/_tarjeta_tutor.html' %}
+        </div>
+
+        <!-- SALUD -->
+        <div class="vista" id="vista-salud">
+            {% set completa = true %}
+            {% include 'publico/_tarjeta_salud.html' %}
+
+            <section class="card tarjeta">
+                <h3 class="titulo-tarjeta">
+                    <span class="icono-titulo"><svg><use href="#i-shield"></use></svg></span>Alergias y condiciones
+                </h3>
+                <ul class="lista-simple">
+                    {% for c in condiciones %}
+                        <li>
+                            <strong>{{ c.nombre_condicion }}</strong>
+                            <span class="etiqueta">{{ c.gravedad }}</span>
+                            {% if c.observaciones %}<p class="suave">{{ c.observaciones }}</p>{% endif %}
+                        </li>
+                    {% else %}
+                        <li class="vacio">No hay alergias ni condiciones registradas.</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+
+        <!-- HISTORIAL -->
+        <div class="vista" id="vista-historial">
+            <section class="card tarjeta tarjeta-salud">
+                <h3 class="titulo-tarjeta">
+                    <span class="icono-titulo"><svg><use href="#i-calendar"></use></svg></span>Historial médico
+                </h3>
+                <ol class="linea-tiempo">
+                    {% for h in salud %}
+                        <li>
+                            <time>{{ m.fecha_corta(h.fecha_atencion) }}</time>
+                            <div>
+                                <h6>{{ h.titulo }} <span class="etiqueta">{{ h.tipo }}</span></h6>
+                                <p>{{ h.descripcion }}</p>
+                                <p class="suave">
+                                    {% if h.proxima_fecha %}Próxima fecha: {{ m.fecha_corta(h.proxima_fecha) }}{% endif %}
+                                </p>
+                                {% if h.firma_ok %}
+                                    <p class="firma firma-ok"><svg><use href="#i-check"></use></svg>Firmado digitalmente por {{ h.veterinario_nombre }}</p>
+                                {% else %}
+                                    <p class="firma firma-mala"><svg><use href="#i-alert"></use></svg>Registro de {{ h.veterinario_nombre }} sin firma válida</p>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="vacio">Todavía no hay registros médicos.</li>
+                    {% endfor %}
+                </ol>
+            </section>
+        </div>
+
+        <!-- DOCUMENTOS -->
+        <div class="vista" id="vista-documentos">
+            <section class="card tarjeta tarjeta-docs">
+                <h3 class="titulo-tarjeta">
+                    <span class="icono-titulo"><svg><use href="#i-doc-badge"></use></svg></span>Documentos
+                </h3>
+
+                {% if ver_privado %}
+                    <ul class="lista-docs lista-docs-grande">
+                        {% for d in documentos %}
+                            <li>
+                                <a href="{{ url_for('static', filename=d.archivo_url) }}" target="_blank" rel="noopener">
+                                    <span class="icono-doc color-{{ loop.index0 % 4 }}"><svg><use href="#i-file-small"></use></svg></span>
+                                    <span>{{ d.nombre_doc }}<small>{{ d.tipo }} · {{ m.fecha_corta(d.created_at) }}</small></span>
+                                    <svg class="flecha"><use href="#i-chevron"></use></svg>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="vacio">Aún no hay documentos guardados.</li>
+                        {% endfor %}
+                    </ul>
+                    <a class="boton boton-violeta boton-auto" href="{{ url_for('documentos_privados', id_mascota=mascota.id_mascota) }}">
+                        Administrar documentos<svg><use href="#i-chevron"></use></svg>
+                    </a>
+                {% else %}
+                    <p class="privado"><svg><use href="#i-lock"></use></svg>Los documentos son privados y solo los puede ver el tutor o un veterinario.</p>
+                {% endif %}
+            </section>
+        </div>
+
+        <!-- CONTACTOS DE EMERGENCIA -->
+        <div class="vista" id="vista-contactos">
+            <section class="card tarjeta tarjeta-tutor">
+                <h3 class="titulo-tarjeta">
+                    <span class="icono-titulo"><svg><use href="#i-phone"></use></svg></span>Contactos de emergencia
+                </h3>
+
+                <h4 class="subtitulo">Tutor</h4>
+                {% if tutor %}
+                    <dl class="lista-datos en-columnas">
+                        <div><dt>Nombre</dt><dd>{{ tutor.nombre }}</dd></div>
+                        <div><dt>Teléfono</dt><dd>{% if tutor.telefono %}<a class="enlace" href="tel:{{ tutor.telefono }}">{{ tutor.telefono }}</a>{% else %}No registrado{% endif %}</dd></div>
+                        {% if ver_privado %}
+                            <div><dt>Correo</dt><dd><a class="enlace" href="mailto:{{ tutor.email }}">{{ tutor.email }}</a></dd></div>
+                        {% endif %}
+                    </dl>
+                {% endif %}
+
+                <h4 class="subtitulo">Veterinarios</h4>
+                <ul class="lista-simple">
+                    {% for v in veterinarios %}
+                        <li>
+                            <strong>{{ v.usuario_nombre }}</strong>
+                            {% if v.es_verificado %}<span class="etiqueta etiqueta-ok">Verificado</span>{% endif %}
+                            {% if v.especialidad %}<p class="suave">{{ v.especialidad }}</p>{% endif %}
+                        </li>
+                    {% else %}
+                        <li class="vacio">Todavía no hay veterinarios registrados.</li>
+                    {% endfor %}
+                </ul>
+
+                {% if puede_chatear %}
+                    <button class="boton boton-turquesa boton-auto" type="button" data-accion="chat-vet">Abrir chat con veterinarios<svg><use href="#i-chevron"></use></svg></button>
+                {% endif %}
+            </section>
+        </div>
+
+        <!-- UBICACIÓN Y EXTRAVÍO -->
+        <div class="vista" id="vista-ubicacion">
+            {% include 'publico/_barra_extravio.html' %}
+
+            {% if ver_privado %}
+                <section class="card tarjeta">
+                    <h3 class="titulo-tarjeta">
+                        <span class="icono-titulo"><svg><use href="#i-target"></use></svg></span>Avistamientos
+                    </h3>
+                    <ul class="lista-simple">
+                        {% for a in avistamientos[:5] %}
+                            <li>
+                                <a class="enlace" target="_blank" rel="noopener" href="https://www.google.com/maps?q={{ a.latitud }},{{ a.longitud }}">Ver en el mapa</a>
+                                <span class="suave"> · {{ m.fecha_hora(a.created_at) }}</span>
+                            </li>
+                        {% else %}
+                            <li class="vacio">Nadie ha escaneado la placa con la mascota extraviada.</li>
+                        {% endfor %}
+                    </ul>
+                    <a class="boton boton-turquesa boton-auto" href="{{ url_for('avistamientos_mascota', id_mascota=mascota.id_mascota) }}">Ver todos los avistamientos<svg><use href="#i-chevron"></use></svg></a>
+                </section>
+            {% endif %}
+        </div>
+
+    </main>
+
+    <!-- ===== CHAT ===== -->
+    {% include 'publico/_chat.html' %}
+
+    <!-- Botón para volver a abrir el chat cuando está cerrado -->
+    <button class="chat-flotante" type="button" data-accion="abrir-chat" hidden aria-label="Abrir chat">
+        <svg><use href="#i-chat"></use></svg>Chat
+    </button>
+
+</div>
+{% endblock %}

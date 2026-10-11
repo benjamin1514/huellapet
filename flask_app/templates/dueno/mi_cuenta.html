@@ -1,19 +1,74 @@
-<!doctype html>
-<html lang="es">
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mi cuenta</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block titulo %}Huellapet | Portal del tutor{% endblock %}
 
-<body>
-    <main class="container py-4">{% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div
-            class="alert alert-{{c}}">{{m}}</div>{% endfor %}{% endwith %}<h1>Mis mascotas</h1>{% for m in mascotas %}
-        <p><a href="{{ url_for('dashboard_publico',codigo=m.codigo_huellapet) }}">{{ m.nombre }}</a></p>{% else %}<p>Aún
-            no tienes mascotas.</p>{% endfor %}<a href="{{ url_for('logout') }}">Cerrar sesión</a></main>
-</body>
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Portal del tutor</h1>
 
-</html>
+    <div class="acciones">
+        <a class="boton boton-verde boton-auto" href="{{ url_for('citas_tutor') }}">Mis citas</a>
+        <a class="boton boton-violeta boton-auto" href="{{ url_for('mi_plan') }}">Mi plan: {{ 'Premium' if premium else 'Gratis' }}</a>
+    </div>
+
+    <!-- Alertas de vacuna que vencen pronto -->
+    {% if alertas %}
+        <section class="card tarjeta">
+            <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-bell"></use></svg></span>Alertas de vacuna</h2>
+            <ul class="lista-simple">
+                {% for a in alertas %}
+                    <li>
+                        <strong>{{ a.mascota }}: {{ a.titulo }}</strong>
+                        <span class="etiqueta {{ 'etiqueta-atraso' if a.dias < 0 else 'etiqueta-ok' }}">
+                            {% if a.dias < 0 %}Venció hace {{ -a.dias }} días{% elif a.dias == 0 %}Es hoy{% else %}En {{ a.dias }} días{% endif %}
+                        </span>
+                        <p class="suave">{{ m.fecha_corta(a.fecha) }}{% if a.automatica %} · Recordatorio automático{% endif %}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <h2 class="titulo-pagina titulo-chico">Mis mascotas</h2>
+    {% include 'dueno/_lista_mascotas.html' %}
+
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Vincular una mascota</h2>
+
+        <form method="post" action="{{ url_for('crear_mi_mascota') }}" enctype="multipart/form-data" class="formulario">
+            <label class="campo">Nombre
+                <input type="text" name="nombre" required>
+            </label>
+            <label class="campo">Especie
+                <select name="id_tipo_especie" required>
+                    {% for e in especies %}<option value="{{ e.id }}">{{ e.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Sexo
+                <select name="id_tipo_sexo" required>
+                    {% for s in sexos %}<option value="{{ s.id }}">{{ s.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Raza
+                <input type="text" name="raza">
+            </label>
+            <label class="campo">Fecha de nacimiento
+                <input type="date" name="fecha_nacimiento">
+            </label>
+            <label class="campo">Peso (kg)
+                <input type="number" step="0.01" name="peso_kg">
+            </label>
+            <label class="campo campo-ancho">Descripción
+                <textarea name="descripcion" rows="3"></textarea>
+            </label>
+            <label class="campo campo-ancho">Foto
+                <input type="file" name="foto" accept="image/*">
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-turquesa boton-auto" type="submit">Guardar mascota<svg><use href="#i-chevron"></use></svg></button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

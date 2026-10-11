@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
+
+{% block titulo %}Huellapet | Citas y clínicas{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Citas y clínicas asociadas</h1>
+    <p><a class="enlace" href="{{ url_for('panel_veterinario') }}">← Volver al panel</a></p>
+
+    <!-- Citas pedidas por los tutores -->
+    <section class="card tarjeta tarjeta-salud">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-calendar"></use></svg></span>Citas</h2>
+
+        <ul class="lista-simple">
+            {% for c in citas %}
+                <li>
+                    <strong>{{ c.mascota_nombre }} · {{ c.clinica_nombre }}</strong>
+                    <span class="etiqueta {{ 'etiqueta-ok' if c.estado == 'Confirmada' else ('etiqueta-grave' if c.estado == 'Cancelada' else 'etiqueta-atraso') }}">{{ c.estado }}</span>
+                    <p class="suave">{{ m.fecha_hora(c.fecha_hora) }} · Tutor: {{ c.tutor_nombre }}</p>
+                    <p>{{ c.motivo }}</p>
+                    <div class="acciones">
+                        {% for estado in ['Confirmada', 'Pendiente', 'Cancelada'] %}
+                            {% if estado != c.estado %}
+                                <form method="post" action="{{ url_for('veterinario_estado_cita', id_cita=c.id_cita) }}">
+                                    <input type="hidden" name="estado" value="{{ estado }}">
+                                    <button class="boton boton-claro" type="submit">Marcar como {{ estado | lower }}</button>
+                                </form>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no hay citas.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Clínicas asociadas -->
+    <section class="card tarjeta tarjeta-docs">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-pin"></use></svg></span>Clínicas asociadas</h2>
+
+        <ul class="lista-simple">
+            {% for cl in clinicas %}
+                <li>
+                    <strong>{{ cl.nombre }}</strong>
+                    <p class="suave">{{ cl.direccion or 'Sin dirección' }}{% if cl.telefono %} · {{ cl.telefono }}{% endif %}</p>
+                    <form method="post" data-confirmar="¿Eliminar esta clínica?" action="{{ url_for('veterinario_eliminar_clinica', id_clinica=cl.id_clinica) }}">
+                        <button class="boton-texto" type="submit">Eliminar clínica</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no hay clínicas asociadas.</li>
+            {% endfor %}
+        </ul>
+
+        <form method="post" action="{{ url_for('veterinario_crear_clinica') }}" class="formulario">
+            <label class="campo">Nombre de la clínica
+                <input type="text" name="nombre" required>
+            </label>
+            <label class="campo">Teléfono
+                <input type="text" name="telefono">
+            </label>
+            <label class="campo campo-ancho">Dirección
+                <input type="text" name="direccion">
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-violeta boton-auto" type="submit">Agregar clínica<svg><use href="#i-plus"></use></svg></button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

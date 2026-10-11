@@ -1,0 +1,29 @@
+{# VISTA DE EMERGENCIA: lo primero que se ve al escanear el QR o el chip NFC #}
+<section class="emergencia">
+    <div class="emergencia-bloque">
+        <h3><svg><use href="#i-phone"></use></svg>Teléfono del tutor</h3>
+        {% if tutor and tutor.telefono %}
+            <a class="emergencia-telefono" href="tel:{{ tutor.telefono }}">{{ tutor.telefono }}</a>
+            <p class="suave">{{ tutor.nombre }}</p>
+        {% else %}
+            <p class="suave">El tutor no registró un teléfono.</p>
+        {% endif %}
+    </div>
+
+    <div class="emergencia-bloque emergencia-ancho">
+        <h3><svg><use href="#i-alert"></use></svg>Alergias, condiciones y cuidados especiales</h3>
+        {% if condiciones %}
+            <ul class="emergencia-lista">
+                {% for c in condiciones %}
+                    <li>
+                        <strong>{{ c.nombre_condicion }}</strong>
+                        <span class="etiqueta {{ 'etiqueta-grave' if c.gravedad == 'Grave' else ('etiqueta-atraso' if c.gravedad == 'Moderada' else '') }}">{{ c.gravedad }}</span>
+                        {% if c.observaciones %}<p>{{ c.observaciones }}</p>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="suave">No hay alergias ni cuidados especiales registrados.</p>
+        {% endif %}
+    </div>
+</section>

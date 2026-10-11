@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Huellapet | Crear cuenta{% endblock %}
+
+{% block contenido %}
+<main class="pagina pagina-centrada">
+    <section class="card caja-acceso">
+        <span class="acceso-icono"><svg><use href="#i-plus"></use></svg></span>
+        <h1>Crear cuenta de tutor</h1>
+
+        <form method="post" class="formulario-simple">
+            <label class="campo">Nombre
+                <input type="text" name="nombre" required autofocus>
+            </label>
+            <label class="campo">Correo
+                <input type="email" name="email" required>
+            </label>
+            <label class="campo">Contraseña
+                <input type="password" name="password" required>
+            </label>
+            <label class="campo">Teléfono (se muestra en la ficha de emergencia)
+                <input type="text" name="telefono">
+            </label>
+            <label class="campo">Dirección
+                <input type="text" name="direccion">
+            </label>
+            <button class="boton boton-turquesa" type="submit">Registrarme<svg><use href="#i-chevron"></use></svg></button>
+        </form>
+
+        <p class="nota">¿Ya tienes cuenta? <a class="enlace" href="{{ url_for('login_tutor') }}">Iniciar sesión</a></p>
+    </section>
+</main>
+{% endblock %}

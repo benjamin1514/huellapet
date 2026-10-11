@@ -1,0 +1,23 @@
+{# Lista de las mascotas del tutor (variable "mascotas") #}
+<div class="rejilla-mascotas">
+    {% for mascota in mascotas %}
+        <article class="card mini-mascota">
+            {% if mascota.foto_url %}
+                <img class="mini-foto" src="{{ url_for('static', filename=mascota.foto_url) }}" alt="Foto de {{ mascota.nombre }}">
+            {% else %}
+                <div class="mini-foto foto-vacia"><svg fill="currentColor"><use href="#i-paw"></use></svg></div>
+            {% endif %}
+            <div class="mini-datos">
+                <h3>{{ mascota.nombre }}</h3>
+                <p class="suave">{{ mascota.raza or 'Sin raza registrada' }}</p>
+                <p class="codigo-chico">{{ mascota.codigo_huellapet }}</p>
+                <div class="mini-botones">
+                    <a class="boton boton-turquesa" href="{{ url_for('dashboard_publico', codigo=mascota.codigo_huellapet) }}">Ver ficha</a>
+                    <a class="boton boton-claro" href="{{ url_for('mi_mascota', id_mascota=mascota.id_mascota) }}">Administrar</a>
+                </div>
+            </div>
+        </article>
+    {% else %}
+        <p class="nota">Aún no tienes mascotas vinculadas a tu cuenta.</p>
+    {% endfor %}
+</div>

@@ -1,58 +1,83 @@
-<!doctype html>
-<html lang="es">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Veterinario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% block titulo %}Huellapet | Panel veterinario{% endblock %}
 
-<body>
-    <main class="container py-4">
-        {% with ms=get_flashed_messages(with_categories=true) %}{% for c,m in ms %}<div class="alert alert-{{c}}">{{m}}
-        </div>{% endfor %}{% endwith %}
-        <div class="d-flex justify-content-between align-items-center">
-            <h1>Panel veterinario</h1><a class="btn btn-outline-secondary" href="{{ url_for('logout') }}">Cerrar
-                sesión</a>
-        </div>
-        <p>Frontend provisional. Desde aquí ya puedes crear y abrir registros de mascotas.</p>
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Panel veterinario</h1>
 
-        <h2 class="h4 mt-4">Registrar mascota</h2>
-        <form method="post" action="{{ url_for('veterinario_crear_mascota') }}" class="row g-2 mb-5">
-            <div class="col-md-4"><label class="form-label">Tutor</label><select name="id_tutor" class="form-select"
-                    required>
-                    <option value="">Selecciona</option>{% for u in tutores %}<option value="{{u.id_usuario}}">
-                        {{u.nombre}} — {{u.email}}</option>{% endfor %}
-                </select></div>
-            <div class="col-md-4"><label class="form-label">Especie</label><select name="id_tipo_especie"
-                    class="form-select" required>{% for x in especies %}<option value="{{x.id}}">{{x.nombre}}</option>{%
-                    endfor %}</select></div>
-            <div class="col-md-4"><label class="form-label">Sexo</label><select name="id_tipo_sexo" class="form-select"
-                    required>{% for x in sexos %}<option value="{{x.id}}">{{x.nombre}}</option>{% endfor %}</select>
+    <div class="acciones">
+        <a class="boton boton-verde boton-auto" href="{{ url_for('panel_citas') }}">Citas y clínicas</a>
+    </div>
+
+    <!-- Mascotas registradas -->
+    <div class="rejilla-mascotas">
+        {% for m in mascotas %}
+            <article class="card mini-mascota">
+                {% if m.foto_url %}
+                    <img class="mini-foto" src="{{ url_for('static', filename=m.foto_url) }}" alt="Foto de {{ m.nombre }}">
+                {% else %}
+                    <div class="mini-foto foto-vacia"><svg fill="currentColor"><use href="#i-paw"></use></svg></div>
+                {% endif %}
+                <div class="mini-datos">
+                    <h3>{{ m.nombre }}</h3>
+                    <p class="suave">{{ m.especie }} · Tutor: {{ m.tutor_nombre }}</p>
+                    <p class="codigo-chico">{{ m.codigo_huellapet }}</p>
+                    <div class="mini-botones">
+                        <a class="boton boton-turquesa" href="{{ url_for('dashboard_publico', codigo=m.codigo_huellapet) }}">Ver ficha</a>
+                        <a class="boton boton-claro" href="{{ url_for('veterinario_mascota', id_mascota=m.id_mascota) }}">Administrar</a>
+                    </div>
+                </div>
+            </article>
+        {% else %}
+            <p class="nota">Todavía no hay mascotas registradas.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Registrar mascota -->
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Registrar una mascota</h2>
+
+        <form method="post" action="{{ url_for('veterinario_crear_mascota') }}" enctype="multipart/form-data" class="formulario">
+            <label class="campo campo-ancho">Tutor
+                <select name="id_tutor" required>
+                    <option value="">Elige un tutor</option>
+                    {% for t in tutores %}<option value="{{ t.id_usuario }}">{{ t.nombre }} · {{ t.email }}</option>{% endfor %}
+                </select>
+            </label>
+
+            <label class="campo">Nombre de la mascota
+                <input type="text" name="nombre" required>
+            </label>
+            <label class="campo">Especie
+                <select name="id_tipo_especie" required>
+                    {% for e in especies %}<option value="{{ e.id }}">{{ e.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Sexo
+                <select name="id_tipo_sexo" required>
+                    {% for s in sexos %}<option value="{{ s.id }}">{{ s.nombre }}</option>{% endfor %}
+                </select>
+            </label>
+            <label class="campo">Raza
+                <input type="text" name="raza">
+            </label>
+            <label class="campo">Fecha de nacimiento
+                <input type="date" name="fecha_nacimiento">
+            </label>
+            <label class="campo">Peso (kg)
+                <input type="number" step="0.01" name="peso_kg">
+            </label>
+            <label class="campo campo-ancho">Descripción
+                <textarea name="descripcion" rows="3"></textarea>
+            </label>
+            <label class="campo campo-ancho">Foto
+                <input type="file" name="foto" accept="image/*">
+            </label>
+            <div class="campo-ancho">
+                <button class="boton boton-turquesa boton-auto" type="submit">Guardar mascota<svg><use href="#i-chevron"></use></svg></button>
             </div>
-            <div class="col-md-4"><label class="form-label">Código HuellaPet</label><input name="codigo_huellapet"
-                    class="form-control" required></div>
-            <div class="col-md-4"><label class="form-label">Nombre</label><input name="nombre" class="form-control"
-                    required></div>
-            <div class="col-md-4"><label class="form-label">Raza</label><input name="raza" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Nacimiento</label><input type="date" name="fecha_nacimiento"
-                    class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Peso (kg)</label><input type="number" step="0.01"
-                    name="peso_kg" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Foto URL</label><input name="foto_url" class="form-control">
-            </div>
-            <div class="col-12"><label class="form-label">Descripción</label><textarea name="descripcion"
-                    class="form-control"></textarea></div>
-            <div class="col-12"><button class="btn btn-primary">Crear mascota</button></div>
         </form>
-
-        <h2 class="h4">Mascotas registradas</h2>
-        {% for m in mascotas %}<div class="border rounded p-3 mb-2"><a
-                href="{{ url_for('veterinario_mascota',id_mascota=m.id_mascota) }}"><strong>{{ m.nombre }}</strong></a>
-            — {{ m.tutor_nombre }} — {{m.especie}}</div>{% else %}<p>No hay mascotas registradas.</p>{% endfor %}
-    </main>
-</body>
-
-</html>
+    </section>
+</main>
+{% endblock %}

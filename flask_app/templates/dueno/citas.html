@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as m %}
+
+{% block titulo %}Huellapet | Mis citas{% endblock %}
+
+{% block contenido %}
+<main class="pagina">
+    <h1 class="titulo-pagina">Mis citas médicas</h1>
+    <p><a class="enlace" href="{{ url_for('mi_cuenta') }}">← Volver a mi cuenta</a></p>
+
+    <section class="card tarjeta tarjeta-salud">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-calendar"></use></svg></span>Citas agendadas</h2>
+
+        <ul class="lista-simple">
+            {% for c in citas %}
+                <li>
+                    <strong>{{ c.mascota_nombre }} · {{ c.clinica_nombre }}</strong>
+                    <span class="etiqueta {{ 'etiqueta-ok' if c.estado == 'Confirmada' else ('etiqueta-grave' if c.estado == 'Cancelada' else 'etiqueta-atraso') }}">{{ c.estado }}</span>
+                    <p class="suave">{{ m.fecha_hora(c.fecha_hora) }} · {{ c.motivo }}</p>
+                    {% if c.estado != 'Cancelada' %}
+                        <form method="post" data-confirmar="¿Cancelar esta cita?" action="{{ url_for('cancelar_cita', id_cita=c.id_cita) }}">
+                            <button class="boton-texto" type="submit">Cancelar cita</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="vacio">Todavía no tienes citas.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="card tarjeta formulario-tarjeta">
+        <h2 class="titulo-tarjeta"><span class="icono-titulo"><svg><use href="#i-plus"></use></svg></span>Agendar una cita</h2>
+
+        {% if mascotas and clinicas %}
+            <form method="post" action="{{ url_for('crear_cita') }}" class="formulario">
+                <label class="campo">Mascota
+                    <select name="id_mascota" required>
+                        {% for mascota in mascotas %}<option value="{{ mascota.id_mascota }}">{{ mascota.nombre }}</option>{% endfor %}
+                    </select>
+                </label>
+                <label class="campo">Clínica asociada
+                    <select name="id_clinica" required>
+                        {% for cl in clinicas %}<option value="{{ cl.id_clinica }}">{{ cl.nombre }}{% if cl.direccion %} · {{ cl.direccion }}{% endif %}</option>{% endfor %}
+                    </select>
+                </label>
+                <label class="campo">Fecha y hora
+                    <input type="datetime-local" name="fecha_hora" required>
+                </label>
+                <label class="campo">Motivo
+                    <input type="text" name="motivo" required>
+                </label>
+                <div class="campo-ancho">
+                    <button class="boton boton-turquesa boton-auto" type="submit">Solicitar cita<svg><use href="#i-chevron"></use></svg></button>
+                </div>
+            </form>
+        {% elif not mascotas %}
+            <p class="nota">Primero vincula una mascota a tu cuenta.</p>
+        {% else %}
+            <p class="nota">Todavía no hay clínicas asociadas disponibles.</p>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}
